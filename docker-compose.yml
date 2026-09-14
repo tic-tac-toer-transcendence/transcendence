@@ -1,0 +1,15 @@
+name: transcendence
+
+services:
+  frontend:
+    container_name: frontend
+    image: frontend
+    build: ./src/frontend
+  backend:
+    container_name: backend
+    image: backend
+    build: ./src/backend
+  db:
+    container_name: db
+    image: db
+    build: ./src/db
