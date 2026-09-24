@@ -9,7 +9,7 @@ RUN go mod download && go get -u github.com/gin-gonic/gin@v1.12.0
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH \
-    go build -o /server ./cmd/server
+    go build -o /server .
 
 # Running the backend server
 FROM gcr.io/distroless/static-debian12:nonroot
