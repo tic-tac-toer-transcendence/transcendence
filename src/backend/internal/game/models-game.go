@@ -1,5 +1,7 @@
 package game
 
+import "fmt"
+
 type Owner int
 
 const (
@@ -20,15 +22,37 @@ func (o Owner) String() string {
 }
 
 type FieldIn struct {
-	top    [3]int
-	mid    [3]int
-	bottom [3]int
-	Owner Owner
+	Top    [3]Owner
+	Mid    [3]Owner
+	Bottom [3]Owner
+	Winner Owner
+}
+
+func displayRow(row [3]Owner) {
+	fmt.Print("[")
+	for i := 0; i < 3; i++ {
+		var owner = row[i]
+		if owner == None {
+			fmt.Printf("%s", " ")
+		} else {
+			fmt.Printf("%s", row[i].String())
+		}
+		if i < 2 {
+			fmt.Print("|")
+		}
+	}
+	fmt.Println("]")
+}
+
+func (f FieldIn) Display() {
+	displayRow(f.Top)
+	displayRow(f.Mid)
+	displayRow(f.Bottom)
 }
 
 type FieldOut struct {
-	top    [3]FieldIn
-	mid    [3]FieldIn
-	bottom [3]FieldIn
-	Owner Owner
+	Top    [3]FieldIn
+	Mid    [3]FieldIn
+	Bottom [3]FieldIn
+	Winner Owner
 }
