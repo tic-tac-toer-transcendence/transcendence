@@ -1,4 +1,4 @@
-package models-game
+package game
 
 type Owner int
 
