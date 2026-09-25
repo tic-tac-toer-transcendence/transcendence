@@ -157,11 +157,18 @@ func (board BoardOut) Display(selected Position) {
 }
 
 type Session struct {
-	Board BoardOut
-	Selected Position
+	Board		BoardOut
+	Selected	Position
+	Turn		int
 }
 
 func (s Session) Display() {
 	s.Board.Display(s.Selected)
 	fmt.Printf("Currently selected: %s", s.Selected.String())
+}
+
+func (s *Session) SelectBoard(p Position) {
+	if s.Turn == 0 {
+		s.Selected = p
+	}
 }

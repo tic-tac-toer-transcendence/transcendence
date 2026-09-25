@@ -16,7 +16,12 @@ import (
 func main() {
 
 	var test = new(game.Session)
-	test.Selected = game.BottomRight
+	test.Selected = game.Unpositioned
+	test.Display()
+	fmt.Println()
+
+	fmt.Println("---\nWe are now selecting the MidMid field\n---")
+	test.SelectBoard(game.MidMid)
 	
 	test.Display()
 	fmt.Println()
