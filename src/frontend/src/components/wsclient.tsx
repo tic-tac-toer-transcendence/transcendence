@@ -27,16 +27,16 @@ export default function WsClient() {
 	}
 
 	return (
-		<section>
-			<h2>Websocket Client</h2>
-			<div>{messages.map((message, i) => (<p key={i}>{message}</p>))}</div>
+		<section className="flex flex-col w-full items-center gap-5">
+			<h2 className="text-xl font-black">Websocket Client</h2>
+			<div className="bg-section-bg border border-section-border p-[24] rounded-[24]">{messages.map((message, i) => (<p key={i}>{message}</p>))}</div>
 			<input
 				type="text"
 				placeholder="Input your message"
 				value={input}
 				onChange={(e) => setInput(e.target.value)}
 			/>
-			<button onClick={sendMessage}>Send</button>
+			<button onClick={sendMessage} className="font-bold text-xl border border-button-border bg-button-bg w-[90]">Send</button>
 		</section>
 	)
 }
