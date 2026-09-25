@@ -5,12 +5,14 @@ services:
     container_name: frontend
     image: frontend
     build: ./src/frontend
-    ports: 
+    ports:
       - 3000:3000
   backend:
     container_name: backend
     image: backend
     build: ./src/backend
+    ports:
+      - 8080:8080
   db:
     container_name: db
     image: db
