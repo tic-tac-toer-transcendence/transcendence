@@ -15,14 +15,15 @@ import (
 
 func main() {
 
-	var test = new(game.FieldIn)
-	test.Top[0] = game.Cross
-	test.Mid[1] = game.Circle
+	var test = new(game.Session)
+	test.Board.Top[0].Top[0] = game.Cross
+	test.Board.Mid[0].Mid[1] = game.Circle
 
-	test.Display()
+	test.Board.Display()
 	// fmt.Println(test)
 
 	fmt.Println()
+	fmt.Print("The answer to the universe is: ")
 	fmt.Println(game.Answer())
 	os.Exit(0)
 
