@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	// Std
-	"fmt"
 	"os"
+	"fmt"
 
 	// Internal
 	"tac-backend/internal/game"
@@ -16,15 +16,15 @@ import (
 func main() {
 
 	var test = new(game.Session)
-	test.Board.Top[0].Top[0] = game.Cross
-	test.Board.Mid[0].Mid[1] = game.Circle
-
-	test.Board.Display()
-	// fmt.Println(test)
-
+	test.Selected = game.BottomRight
+	
+	test.Display()
 	fmt.Println()
-	fmt.Print("The answer to the universe is: ")
-	fmt.Println(game.Answer())
+
+	// fmt.Println()
+	// fmt.Print("The answer to the universe is: ")
+	// fmt.Println(game.Answer())
+	
 	os.Exit(0)
 
 	// This is from the gin tutorial

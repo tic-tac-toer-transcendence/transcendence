@@ -5,7 +5,7 @@ import "fmt"
 type Owner int
 
 const (
-    None Owner = iota
+    Ownerless Owner = iota
     Cross
     Circle
 )
@@ -32,7 +32,7 @@ func displayRowIn(row [3]Owner) {
 	fmt.Print("[")
 	for i := 0; i < 3; i++ {
 		var owner = row[i]
-		if owner == None {
+		if owner == Ownerless {
 			fmt.Printf("%s", " ")
 		} else {
 			fmt.Printf("%s", row[i].String())
@@ -60,32 +60,108 @@ type BoardOut struct {
 	Winner Owner
 }
 
-func displayRowOut(board [3]BoardIn) {
+type Position int
+
+const (
+	TopLeft Position = iota
+	TopMid
+	TopRight
+	MidLeft
+	MidMid
+	MidRight
+	BottomLeft
+	BottomMid
+	BottomRight
+	Unpositioned
+)
+
+func (p Position) String() string {
+	switch p {
+	case TopLeft:
+		return "Top-Left"
+	case TopMid:
+		return "Top-Mid"
+	case TopRight:
+		return "Top-Right"
+	case MidLeft:
+		return "Mid-Left"
+	case MidMid:
+		return "Mid-Mid"
+	case MidRight:
+		return "Mid-Right"
+	case BottomLeft:
+		return "Bottom-Left"
+	case BottomMid:
+		return "Bottom-Mid"
+	case BottomRight:
+		return "Bottom-Right"
+	default:
+		return "None"
+	}
+}
+
+var colorReset = "\033[0m"
+var colorBlue = "\033[36m"
+
+func displayRowOut(board [3]BoardIn, selected int) {
 	for i := 0; i < 3; i++ {
+		if i == selected {
+			fmt.Print(colorBlue)
+		}
 		displayRowIn(board[i].Top)
+		fmt.Print(colorReset)
 		fmt.Print("  ")
 	}
 	fmt.Println()
 	for i := 0; i < 3; i++ {
+		if i == selected {
+			fmt.Print(colorBlue)
+		}
 		displayRowIn(board[i].Mid)
+		fmt.Print(colorReset)
 		fmt.Print("  ")
 	}
 	fmt.Println()
 	for i := 0; i < 3; i++ {
+		if i == selected {
+			fmt.Print(colorBlue)
+		}
 		displayRowIn(board[i].Bottom)
+		fmt.Print(colorReset)
 		fmt.Print("  ")
 	}
 }
 
-func (board BoardOut) Display() {
-	displayRowOut(board.Top)
+func (board BoardOut) Display(selected Position) {
+	var sel = int(selected)
+	if sel < 3 {
+		displayRowOut(board.Top, int(selected))
+	} else {
+		displayRowOut(board.Top, -1)
+	}
 	fmt.Print("\n\n")
-	displayRowOut(board.Mid)
+
+	if sel > 2 && sel < 6 {
+		displayRowOut(board.Mid, sel - 3)
+	} else {
+		displayRowOut(board.Mid, -1)
+	}
 	fmt.Print("\n\n")
-	displayRowOut(board.Bottom)
+
+	if sel > 5 {
+		displayRowOut(board.Mid, sel - 6)
+	} else {
+		displayRowOut(board.Mid, -1)
+	}
 	fmt.Println()
 }
 
 type Session struct {
 	Board BoardOut
+	Selected Position
+}
+
+func (s Session) Display() {
+	s.Board.Display(s.Selected)
+	fmt.Printf("Currently selected: %s", s.Selected.String())
 }
