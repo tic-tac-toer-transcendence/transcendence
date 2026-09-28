@@ -5,7 +5,10 @@ export default function Home() {
   return (
       <main className="flex">
 		<Sidebar></Sidebar>
-		Under construction
+		<section className="flex flex-col align-center">
+			<h1>Home page</h1>
+			Under construction
+		</section>
       </main>
   );
 }
