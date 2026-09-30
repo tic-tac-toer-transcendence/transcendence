@@ -1,10 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import SidebarLink from "@/components/sidebarLink"
+import HomeIcon from "@/components/icons/homeIcon";
+import PlayIcon from "@/components/icons/playIcon";
 
 export default function Sidebar() {
 	return (
 		<aside className="h-screen w-[250] bg-section-bg border-r border-section-border">
-			<nav className="p-[24] flex flex-col">
+			<nav className="p-[24] h-full flex flex-col justify-between">
 				<section className="flex flex-col gap-[16]">
 					<button>
 						<Link href="/" className="text-white text-sm uppercase font-black flex flex-col items-center gap-2">
@@ -19,8 +22,25 @@ export default function Sidebar() {
 						</Link>
 					</button>
 					<ul className="flex flex-col gap-[8]">
-						<li><Link href="/play" className="bg-button-bg border border-button-border px-[12] py-[14] block rounded-xl">Play</Link></li>
-						<li><Link href="/ws-test" className="bg-button-bg border border-button-border px-[12] py-[14] block rounded-xl">Ws Test</Link></li>
+						<SidebarLink path="/" text="Home">
+							<HomeIcon />
+						</SidebarLink>
+						<SidebarLink path="/play" text="Play">
+							<PlayIcon />
+						</SidebarLink>
+						<SidebarLink path="/ws-test" text="WS Test">
+							<HomeIcon />
+						</SidebarLink>
+					</ul>
+				</section>
+				<section>
+					<ul className="flex flex-col gap-[8]">
+						<SidebarLink path="/login" text="Log In">
+							<HomeIcon />
+						</SidebarLink>
+						<SidebarLink path="/how-to-play" text="How to Play">
+							<PlayIcon />
+						</SidebarLink>
 					</ul>
 				</section>
 			</nav>
