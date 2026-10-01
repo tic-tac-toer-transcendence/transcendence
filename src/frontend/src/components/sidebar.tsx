@@ -3,6 +3,8 @@ import Image from "next/image";
 import SidebarLink from "@/components/sidebarLink"
 import HomeIcon from "@/components/icons/homeIcon";
 import PlayIcon from "@/components/icons/playIcon";
+import LoginIcon from "./icons/loginIcon";
+import QuestionIcon from "./icons/questionIcon";
 
 export default function Sidebar() {
 	return (
@@ -12,11 +14,11 @@ export default function Sidebar() {
 					<button>
 						<Link href="/" className="text-white text-sm uppercase font-black flex flex-col items-center gap-2">
 							<Image
+                                width="40"
+                                height="40"
 								src="logo.svg"
 								alt="website logo"
-								width={40}
-								height={40}
-								className="border rounded-xl border-section-border p-[10]"
+								className="border rounded-xl border-section-border p-[10] w-[40] h-[40]"
 							/>
 							Tic Tac Toer
 						</Link>
@@ -36,10 +38,10 @@ export default function Sidebar() {
 				<section>
 					<ul className="flex flex-col gap-[8]">
 						<SidebarLink path="/login" text="Log In">
-							<HomeIcon />
+							<LoginIcon />
 						</SidebarLink>
 						<SidebarLink path="/how-to-play" text="How to Play">
-							<PlayIcon />
+							<QuestionIcon />
 						</SidebarLink>
 					</ul>
 				</section>
