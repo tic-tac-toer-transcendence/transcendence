@@ -1,10 +1,9 @@
 import PasswordToggleIcon from "@/components/icons/passwordToggleIcon"
-import Image from "next/image"
 import Link from "next/link"
 
 export default function LogIn() {
   return (
-    <main className="grow p-24 flex justify-center">
+    <main className="grow p-8 flex justify-center">
       <section className="w-md p-6 bg-section-bg border border-section-border rounded-3xl flex flex-col gap-7">
         <div className="flex flex-col gap-3">
           <h1 className="text-white font-black text-4xl text-center">Welcome to <span className="text-x-green block">Tic Tac Toer</span></h1>
@@ -44,6 +43,8 @@ export default function LogIn() {
           </div>
           <Link href="/forgot-password" className="text-right font-semibold text-sm text-x-green">Forgot password?</Link>
           <button className="font-semibold bg-button-bg border border-button-border rounded-lg w-full p-4">Log in</button>
+          <p className="text-center text-sm">New to Tic Tac Toer?</p>
+          <Link href="/create-account" className="font-semibold bg-button-bg border border-button-border rounded-lg w-full p-4">Create an account</Link>
         </form>
       </section>
     </main>
