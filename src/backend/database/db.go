@@ -1,7 +1,6 @@
 package database
 
-import
-(
+import (
 	"fmt"
 	"log"
 	"os"
@@ -11,28 +10,24 @@ import
 
 var DB *gorm.DB
 
-func InitDB()
-{
-	dsn := fmt.Sprintf
-	(
-		"host=db user=%s password=%s dbname=%s port=5432 sslmode=disable",
+func InitDB() {	
+	dsn := fmt.Sprintf (
+		"host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable",
+		os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_USER"),
 		os.Getenv("POSTGRES_PASSWORD"),
 		os.Getenv("POSTGRES_DB"),
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config
-	{
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config {
 		TranslateError: true,
 	})
-	if err != nil
-	{
+	if err != nil {
 		log.Fatal("could not connect to the database: ", err)
 	}
 
 	err = db.AutoMigrate(&User{}, &GameStats{}, &Game{}, &Message{}, &Friend{})
-	if err != nil
-	{
+	if err != nil {
 		log.Fatal("database migrations fail: ", err)
 	}
 

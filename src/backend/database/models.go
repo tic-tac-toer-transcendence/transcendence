@@ -1,37 +1,32 @@
 package database
 
-import
-(
+import (
 	"time"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type PlaySymbol string
-const
-(
+const (
 	SymbolX PlaySymbol = "X"
 	SymbolO PlaySymbol = "O"
 )
 
 type GameStatus string
-const
-(
+const (
 	StatusInProgress	GameStatus = "IN_PROGRESS"
 	StatusFinishedWin	GameStatus = "FINISHED_WIN"
 	StatusFinishedDraw	GameStatus = "FINISHED_DRAW"
 )
 
 type FriendStatus string
-const
-(
+const (
 	FriendPending	FriendStatus = "PENDING"
 	FriendAccepted	FriendStatus = "ACCEPTED"
 	FriendRejected	FriendStatus = "REJECTED"
 )
 
-type User struct
-{
+type User struct {
 	ID			string  `gorm:"primaryKey"`
 	Username	string  `gorm:"unique;not null"`
 	Email		string  `gorm:"unique;not null"`
@@ -41,17 +36,14 @@ type User struct
 	CreatedAt	time.Time
 }
 
-func (u *User) BeforeCreate(tx *gorm.DB) (err error)
-{
-	if u.ID == ""
-	{
+func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+	if u.ID == "" {
 		u.ID = uuid.New().String()
 	}
 	return
 }
 
-type GameStats struct
-{
+type GameStats struct {
 	UserID			string `gorm:"primaryKey"`
 	User			User   `gorm:"foreignKey:UserID"`
 	TotalMatches	int    `gorm:"default:0"`
@@ -62,8 +54,7 @@ type GameStats struct
 	CreatedAt		time.Time
 }
 
-type Game struct
-{
+type Game struct {
 	ID				string		`gorm:"primaryKey"`
 	Player1ID		string
 	Player1			User		`gorm:"foreignKey:Player1ID"`
@@ -77,17 +68,14 @@ type Game struct
 	FinishedAt		*time.Time
 }
 
-func (g *Game) BeforeCreate(tx *gorm.DB) (err error)
-{
-	if g.ID == ""
-	{
+func (g *Game) BeforeCreate(tx *gorm.DB) (err error) {
+	if g.ID == "" {
 		g.ID = uuid.New().String()
 	}
 	return
 }
 
-type Message struct
-{
+type Message struct {
 	ID			string `gorm:"primaryKey"`
 	Content		string `gorm:"not null"`
 	SenderID	string
@@ -97,17 +85,14 @@ type Message struct
 	CreatedAt	time.Time
 }
 
-func (m *Message) BeforeCreate(tx *gorm.DB) (err error)
-{
-	if m.ID == ""
-	{
+func (m *Message) BeforeCreate(tx *gorm.DB) (err error) {
+	if m.ID == "" {
 		m.ID = uuid.New().String()
 	}
 	return
 }
 
-type Friend struct
-{
+type Friend struct {
 	ID			string       `gorm:"primaryKey"`
 	User1ID		string
 	User1		User         `gorm:"foreignKey:User1ID"`
@@ -117,10 +102,8 @@ type Friend struct
 	CreatedAt	time.Time
 }
 
-func (f *Friend) BeforeCreate(tx *gorm.DB) (err error)
-{
-	if f.ID == ""
-	{
+func (f *Friend) BeforeCreate(tx *gorm.DB) (err error) {
+	if f.ID == "" {
 		f.ID = uuid.New().String()
 	}
 	return
