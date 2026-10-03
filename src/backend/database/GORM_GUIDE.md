@@ -21,15 +21,9 @@ POSTGRES_PASSWORD=pass123
 
 POSTGRES_DB=transcendence
 
+POSTGRES_HOST=localhost - when backend gets into container, this can be changed to 'db'
+
 ## Setup — do this once (dont forget to update go.mod on github)
-
-You must have already go.mod file and use CLI from same directory.
-
-```bash
-go get gorm.io/gorm gorm.io/driver/postgres github.com/google/uuid
-```
-
-This will download library and write them in go.mod (nobody else needs to do it, as when they try to run server on their machine, it should download automatically when reading mod.go file)
 
 ## Using it — the two things every file needs
 
