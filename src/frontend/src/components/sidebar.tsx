@@ -8,7 +8,7 @@ import QuestionIcon from "./icons/questionIcon";
 
 export default function Sidebar() {
 	return (
-		<aside className="h-screen w-[250] bg-section-bg border-r border-section-border">
+		<aside className="h-screen w-[250] bg-section-bg border-r-2 border-section-border">
 			<nav className="p-[24] h-full flex flex-col justify-between">
 				<section className="flex flex-col gap-[16]">
 					<button>
