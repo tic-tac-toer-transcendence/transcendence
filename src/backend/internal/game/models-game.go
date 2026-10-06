@@ -78,25 +78,50 @@ const (
 func (p Position) String() string {
 	switch p {
 	case TopLeft:
-		return "Top-Left"
+		return "TopLeft"
 	case TopMid:
-		return "Top-Mid"
+		return "TopMid"
 	case TopRight:
-		return "Top-Right"
+		return "TopRight"
 	case MidLeft:
-		return "Mid-Left"
+		return "MidLeft"
 	case MidMid:
-		return "Mid-Mid"
+		return "MidMid"
 	case MidRight:
-		return "Mid-Right"
+		return "MidRight"
 	case BottomLeft:
-		return "Bottom-Left"
+		return "BottomLeft"
 	case BottomMid:
-		return "Bottom-Mid"
+		return "BottomMid"
 	case BottomRight:
-		return "Bottom-Right"
+		return "BottomRight"
 	default:
 		return "None"
+	}
+}
+
+func StrToPos(s string) Position {
+	switch s {
+	case "TopLeft":
+		return TopLeft
+	case "TopMid":
+		return TopMid
+	case "TopRight":
+		return TopRight
+	case "MidLeft":
+		return MidLeft
+	case "MidMid":
+		return MidMid
+	case "MidRight":
+		return MidRight
+	case "BottomLeft":
+		return BottomLeft
+	case "BottomMid":
+		return BottomMid
+	case "BottomRight":
+		return BottomRight
+	default:
+		return Unpositioned
 	}
 }
 
@@ -160,15 +185,15 @@ type Session struct {
 	Board		BoardOut
 	Selected	Position
 	Turn		int
+	Winner		Owner
 }
 
 func (s Session) Display() {
 	s.Board.Display(s.Selected)
-	fmt.Printf("Currently selected: %s", s.Selected.String())
+	// fmt.Printf("Currently selected: %s", s.Selected.String())
 }
 
 func (s *Session) SelectBoard(p Position) {
-	if s.Turn == 0 {
-		s.Selected = p
-	}
+	// TODO: Add error handling for non existent positions
+	s.Selected = p
 }
