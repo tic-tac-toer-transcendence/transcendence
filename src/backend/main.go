@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"fmt"
+	"strings"
 
 	// Internal
 	"tac-backend/internal/game"
@@ -18,6 +19,13 @@ func doClear() {
 	c := exec.Command("clear")
 	c.Stdout = os.Stdout
 	c.Run()
+}
+
+func exitOnRequest(cmd string) {
+	if strings.ToLower(cmd) == "exit" {
+		fmt.Println("Exiting...")
+		os.Exit(0)
+	}
 }
 
 func main() {
@@ -33,6 +41,7 @@ func main() {
 	doClear()
 	fmt.Printf("%s - Select an inner field to start with: ", player.String())
 	fmt.Scanln(&cmd)
+	exitOnRequest(cmd)
 	var board game.Position = game.StrToPos(cmd)
 	test.SelectBoard(board)
 
@@ -50,15 +59,24 @@ func main() {
 		// Ask for field to mark
 		fmt.Printf("%s - Mark your field: ", player.String())
 		fmt.Scanln(&cmd)
+		exitOnRequest(cmd) //added exit on request
 
 		// Add the mark of the current player into the field
 		
 
+		field := game.StrToPos(cmd)
+
+		if err := test.MarkField(field, player); err != nil {
+			fmt.Println(err)
+			fmt.Println("Press Enter to try again.")
+			fmt.Scanln()
+			continue
+		}
 
 
 		// === Prepare next turn
-		board = game.StrToPos(cmd) // No error handling!
-		test.SelectBoard(board)
+
+		test.SelectBoard(field)
 
 		test.Turn += 1
 
