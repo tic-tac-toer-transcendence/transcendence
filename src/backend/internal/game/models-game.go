@@ -248,8 +248,44 @@ func (s Session) Display() {
 }
 
 func (s *Session) SelectBoard(p Position) {
-	// TODO: Add error handling for non existent positions
 	s.Selected = p
+}
+
+func (board BoardIn) CheckWinner() {
+	if board.Winner != Ownerless {
+		return
+	}
+
+	// Check rows
+	rows := [3][3]Owner{board.Top, board.Mid, board.Bottom}
+
+	for _, row := range rows {
+		if row[0] != Ownerless &&
+			row[0] == row[1] &&
+			row[1] == row[2] {
+			board.Winner = row[0]
+			return
+		}
+	}
+
+	// Check columns
+	for i := 0; i < 3; i++ {
+		if board.Top[i] != Ownerless && board.Top[i] == board.Mid[i] && board.Mid[i] == board.Bottom[i] {
+			board.Winner = board.Top[i]
+			return
+		}
+	}
+
+	// Check diagonals
+	if board.Top[0] != Ownerless && board.Top[0] == board.Mid[1] && board.Mid[1] == board.Bottom[2] {
+		board.Winner = board.Top[0]
+		return
+	}
+	if board.Top[2] != Ownerless && board.Top[2] == board.Mid[1] && board.Mid[1] == board.Bottom[0] {
+		board.Winner = board.Top[2]
+		return
+	}	
+
 }
 
 func (s *Session) MarkField(field Position, player Owner) error {
@@ -294,5 +330,7 @@ func (s *Session) MarkField(field Position, player Owner) error {
 	}
 
 	*cell = player
+
+	inner.CheckWinner()
 	return nil
 }

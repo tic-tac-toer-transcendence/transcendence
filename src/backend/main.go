@@ -80,6 +80,8 @@ func main() {
 
 		test.Turn += 1
 
+		fmt.Printf("The board %s has a winner: %s\n", test.Selected.String(), test.Board.Winner.String())
+
 		if player == game.Cross {
 			player = game.Circle
 		} else {
