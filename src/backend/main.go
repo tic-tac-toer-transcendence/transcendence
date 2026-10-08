@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"fmt"
 	"strings"
+	"math/rand/v2"
 
 	// Internal
 	"tac-backend/internal/game"
@@ -34,7 +35,7 @@ func main() {
 	var test = new(game.Session)
 	test.Selected = game.Unpositioned
 	test.Winner = game.Ownerless
-	var player game.Owner = game.Cross // Cross always begins now, later random
+	player := game.Owner(rand.IntN(2) + int(game.Cross))
 	var cmd string
 
 	// First player choses staring field -- Later an event active during the whole turn 0
@@ -72,7 +73,6 @@ func main() {
 			fmt.Scanln()
 			continue
 		}
-
 
 		// === Prepare next turn
 
