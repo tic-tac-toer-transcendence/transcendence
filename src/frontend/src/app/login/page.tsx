@@ -3,7 +3,7 @@ import LoginForm from "@/app/login/form"
 
 export default function LogIn() {
   return (
-    <main className="grow p-18 flex justify-center">
+    <main className="grow p-12 flex justify-center">
       <section className="w-md h-fit p-6 bg-section-bg border border-section-border rounded-3xl flex flex-col gap-7">
         <div className="flex flex-col gap-3">
           <h1 className="text-white font-black text-4xl text-center">Welcome to <span className="text-x-green block">Tic Tac Toer</span></h1>

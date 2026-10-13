@@ -36,7 +36,9 @@ export default function LoginForm() {
       <div className="flex flex-col gap-2">
         <label className="font-bold text-sm text-white" htmlFor="email">Email address</label>
         <input
-          className="block w-full p-4 bg-button-bg border border-button-border rounded-lg"
+          className={
+            `block w-full p-4 bg-button-bg border-2 ${state.emailErrors.length ? "border-red-500" : "border-button-border"} rounded-lg`
+          }
           placeholder="Your email"
           type="email"
           name="email"
@@ -45,12 +47,12 @@ export default function LoginForm() {
           defaultValue={state.email}
           required
         />
-        <p>{state.emailErrors.length ? state.emailErrors[0].message : ""}</p>
+        <p className="text-red-500 font-semibold">{state.emailErrors.length ? state.emailErrors[0].message : ""}</p>
       </div>
       <div className="flex flex-col gap-2 relative">
         <label className="font-bold text-sm text-white" htmlFor="password">Password</label>
         <input
-          className="block w-full p-4 bg-button-bg border border-button-border rounded-lg"
+          className="block w-full p-4 bg-button-bg border-2 border-button-border rounded-lg"
           placeholder="Password"
           type={type}
           name="password"
