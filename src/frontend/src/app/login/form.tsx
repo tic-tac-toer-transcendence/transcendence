@@ -32,7 +32,7 @@ export default function LoginForm() {
   }
 
   return (
-    <Form action={formAction} id="#login-form" className="flex flex-col gap-5">
+    <Form action={formAction} id="login" className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <label className="font-bold text-sm text-white" htmlFor="email">Email address</label>
         <input

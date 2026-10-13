@@ -13,6 +13,7 @@ export interface CreateUserState {
   passwordError: string,
   username: string,
   usernameError: string
+  gender: "x" | "o" | undefined
 }
 
 const initialState: CreateUserState = {
@@ -21,7 +22,8 @@ const initialState: CreateUserState = {
   password: "",
   passwordError: "",
   username: "",
-  usernameError: ""
+  usernameError: "",
+  gender: undefined
 }
 
 export default function CreateUserForm() {
@@ -36,15 +38,18 @@ export default function CreateUserForm() {
   }
   
   return (
-    <Form action={formAction} id="create-user" className="flex flex-col gap-5">
+    <Form action={formAction} id="create-account" className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <label className="font-bold text-sm text-white" htmlFor="email">Email address</label>
         <input
           className="block w-full p-4 bg-button-bg border border-button-border rounded-lg"
           placeholder="Your email"
           id="email"
+          type="email"
+          name="email"
           defaultValue={state.email}
           autoComplete="email"
+          required
         />
       </div>
       <div className="flex flex-col gap-2 relative">
@@ -53,9 +58,12 @@ export default function CreateUserForm() {
           className="block w-full p-4 bg-button-bg border border-button-border rounded-lg"
           placeholder="Password"
           id="pass"
+          name="password"
+          type={type}
           defaultValue={state.password}
+          required
         />
-        <button className="stroke-2 stroke-foreground absolute right-4 bottom-4" onClick={toggleVisibility}><PasswordToggleIcon/></button>
+        <button className="cursor-pointer stroke-2 stroke-foreground absolute right-4 bottom-4" onClick={toggleVisibility} type="button"><PasswordToggleIcon/></button>
       </div>
       <span className="font-semibold text-center text-sm">Chose a username (you can change it later)</span>
       <div className="flex flex-col gap-2 relative">
@@ -64,30 +72,64 @@ export default function CreateUserForm() {
           className="block w-full p-4 bg-button-bg border border-button-border rounded-lg"
           placeholder="Username"
           id="username"
+          name="username"
+          type="text"
           autoComplete="off"
+          defaultValue={state.username}
+          required
         />
       </div>
       <span className="font-semibold text-center text-sm">Chose your gender (you can change it later)</span>
       <div className="flex gap-10 justify-center">
-        <label htmlFor="x" className="cursor-pointer fill-x-green w-21 h-21 block bg-button-bg border-2 border-button-border hover:border-x-green hover:shadow-sidebar hover:shadow-x-green p-5 rounded-full"><XIcon /></label>
-        <input
-          type="radio"
-          name="gender"
-          id="x"
-          value="x"
-          className="hidden"
-          required
-        />
-        <label htmlFor="o" className="cursor-pointer fill-o-purple w-21 h-21 block bg-button-bg border-2 border-button-border hover:border-o-purple hover:shadow-sidebar hover:shadow-o-purple p-5 rounded-full"><OIcon /></label>
-        <input
-          type="radio"
-          name="gender"
-          id="o"
-          value="o"
-          className="hidden"
-        />
+        <div>
+          <input
+            type="radio"
+            name="gender"
+            id="x"
+            value="x"
+            className="hidden peer"
+            required
+            defaultChecked={state.gender === "x"}
+          />
+          <label htmlFor="x"
+            className={`
+              cursor-pointer
+              fill-x-green
+              w-21 h-21 block
+              p-5 rounded-full
+              bg-button-bg
+              border-2 peer-checked:border-x-green border-button-border hover:border-x-green 
+              hover:shadow-sidebar hover:shadow-x-green peer-checked:shadow-sidebar peer-checked:shadow-x-green
+            `}
+          >
+            <XIcon />
+          </label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            name="gender"
+            id="o"
+            value="o"
+            className="hidden peer"
+            defaultChecked={state.gender === "o"}
+          />
+          <label htmlFor="o"
+            className={`
+              cursor-pointer
+              fill-o-purple
+              w-21 h-21 block
+              p-5 rounded-full
+              bg-button-bg
+              border-2 peer-checked:border-o-purple border-button-border hover:border-o-purple 
+              hover:shadow-sidebar hover:shadow-o-purple peer-checked:shadow-sidebar peer-checked:shadow-o-purple
+            `}
+          >
+            <OIcon />
+          </label>
+        </div>
       </div>
-      <button disabled={pending} className="font-semibold bg-button-bg border border-button-border rounded-lg w-full p-4">Log in</button>
+      <button className="font-semibold bg-button-bg border-2 border-button-border hover:border-x-green hover:shadow-sidebar hover:shadow-x-green rounded-lg w-full p-4 hover:text-x-green cursor-pointer" disabled={pending}>Create account</button>
     </Form>
   )
 }
