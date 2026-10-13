@@ -24,7 +24,7 @@ const initialState: CreateUserState = {
 
 export default function CreateUserForm() {
   const [type, setType] = useState("password");
-  const [state, formAction, pending] = useActionState<CreateUserState>(createUserAction, initialState);
+  const [state, formAction, pending] = useActionState(createUserAction, initialState);
 
   function toggleVisibility() {
     if (type === "password")
