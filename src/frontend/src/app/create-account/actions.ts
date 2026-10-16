@@ -1,6 +1,8 @@
 "use server"
+
 import { CreateUserState } from "./form";
 import { z } from "zod" 
+import { redirect } from "next/navigation"
 
 const passwordSchema = z.string()
   .min(6, {message: "Password must be at least 6 characters long"})
@@ -16,9 +18,8 @@ const registerSchema = z.object({
 })
 
 export default async function createUserAction(prevState: CreateUserState, formData: FormData) {
-  console.log(formData);
-
-  const  formValidation = registerSchema.safeParse({
+  let error = false;
+  const formValidation = registerSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password")
   })
@@ -32,6 +33,7 @@ export default async function createUserAction(prevState: CreateUserState, formD
         emailIssues.push(issue);
       if (issue.path[0] == "password")
         passwordIssues.push(issue);
+      error = true;
     })
   }
   
@@ -48,12 +50,32 @@ export default async function createUserAction(prevState: CreateUserState, formD
   
   const genderStr = formData.get("gender")?.toString();
   switch (genderStr) {
-    case "x": newState.gender = "x"; break;
-    case "o": newState.gender = "o"; break;
+    case "X": newState.gender = "X"; break;
+    case "O": newState.gender = "O"; break;
     default:
       newState.gender = undefined;
       newState.genderError = "Please select a symbol"
+      error = true;
   }
+
+  if (error)
+    return (newState);
+
+  const res = await fetch("http://localhost:8080/register", {
+    method: "POST",
+    body: JSON.stringify({
+      "email": newState.email,
+      "password": newState.password,
+      "username": newState.username,
+      "symbol": newState.gender
+    })
+  })
+
+  if (res.ok) {
+    redirect("/")
+  }
+
+  newState.genderError = await res.text();
 
   return newState;
 }

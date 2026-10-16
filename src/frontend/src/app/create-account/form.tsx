@@ -13,7 +13,7 @@ export interface CreateUserState {
   passwordError: string,
   username: string,
   usernameError: string,
-  gender: "x" | "o" | undefined,
+  gender: "X" | "O" | undefined,
   genderError: string
 }
 
@@ -91,9 +91,9 @@ export default function CreateUserForm() {
               type="radio"
               name="gender"
               id="x"
-              value="x"
+              value="X"
               className="hidden peer"
-              defaultChecked={state.gender === "x"}
+              defaultChecked={state.gender === "X"}
             />
             <label htmlFor="x"
               className={`
@@ -114,9 +114,9 @@ export default function CreateUserForm() {
               type="radio"
               name="gender"
               id="o"
-              value="o"
+              value="O"
               className="hidden peer"
-              defaultChecked={state.gender === "o"}
+              defaultChecked={state.gender === "O"}
             />
             <label htmlFor="o"
               className={`
