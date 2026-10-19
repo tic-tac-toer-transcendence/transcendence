@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <main className="grow flex flex-col">
-      <section className="flex p-24 gap-16 w-full h-screen justify-center items-center">
+      <section className="flex p-24 gap-16 w-full h-screen justify-center items-center" id="landing">
         <div className="flex flex-col gap-8">
           <div className="max-w-md flex flex-col gap-4">
             <h1 className="font-black text-6xl text-white">Tic Tac Toe, <span className="text-x-green">elevated</span></h1>
@@ -15,7 +15,7 @@ export default function Home() {
           </div>
           <div className="flex gap-4">
             <Link href="/play" className="px-7 py-3 border-2 border-button-border hover:border-x-green rounded-lg font-bold text-white uppercase">Play now</Link>
-            <Link href="/rules" className="px-7 py-3 border-2 border-button-border hover:border-x-green rounded-lg font-bold text-white uppercase">Read rules</Link>
+            <Link href="#rules" className="px-7 py-3 border-2 border-button-border hover:border-x-green rounded-lg font-bold text-white uppercase">Read rules</Link>
           </div>
         </div>
         <div className="bg-section-bg border-2 rounded-3xl border-section-border p-8 max-w-lg w-full h-fit">
