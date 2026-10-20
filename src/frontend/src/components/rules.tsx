@@ -2,6 +2,7 @@
 import Board from "@/components/board/board" 
 import { stepOneBoardState } from "@/components/board/presets"
 import { useState } from "react";
+import { ArrowLeft, ArrowRight } from "./icons/arrows";
 
 export default function Rules() {
   const [step, setStep] = useState(1);
@@ -19,7 +20,7 @@ export default function Rules() {
     <section className="h-screen bg-section-bg flex flex-col items-center py-24 px-20" id="rules">
       <span className="font-bold text-x-green text-sm uppercase mb-2">Core mechanics</span>
       <h2 className="font-extrabold text-white text-4xl mb-12">How to play Ultimate Tic Tac Toe</h2>
-      <div className="max-w-5xl w-full">
+      <div className="max-w-5xl w-full mb-4">
         <div className={`p-6 bg-button-bg border-2 border-button-border rounded-2xl flex justify-between items-center ${step !== 1 ? "hidden" : ""}`} >
           <div className="flex flex-col gap-6 max-w-md">
             <div className="flex gap-4 items-center">
@@ -91,9 +92,15 @@ export default function Rules() {
           <Board state={stepOneBoardState()}/>
         </div>
       </div>
-      <div>
-        <button onClick={handlePrev} className="w-14 h-14 rounded-full border-2 bg-button-bg border-button-border hover:border-x-green cursor-pointer">Prev</button>
-        <button onClick={handleNext} className="w-14 h-14 rounded-full border-2 bg-button-bg border-button-border hover:border-x-green cursor-pointer">Next</button>
+      <div className="flex gap-4">
+        <button onClick={handlePrev} className={`w-16 h-16 rounded-full border-2 bg-button-bg border-button-border cursor-pointer flex justify-center items-center
+          fill-button-border ${step !== 1 ? "hover:fill-x-green hover:border-x-green": ""}`}>
+          <ArrowLeft className="w-5/8 h-5/8"/>
+        </button>
+        <button onClick={handleNext} className={`w-16 h-16 rounded-full border-2 bg-button-bg border-button-border cursor-pointer flex justify-center items-center
+          fill-button-border ${step !== 5 ? "hover:fill-x-green hover:border-x-green" : ""}`}>
+          <ArrowRight className="w-5/8 h-5/8"/>
+        </button>
       </div>
     </section>
   )
