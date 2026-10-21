@@ -11,8 +11,8 @@ export default function Cell({ state }: { state: CellState }) {
   return (
     <li className="bg-section-bg border border-button-border w-full h-0 pb-[calc(100%-2px)] relative">
       <button className={`absolute p-2 ${state.claimed === "X" ? "fill-x-green": state.claimed === "O" ? "fill-o-purple" : ""}`}>
-      {state.claimed === "X" && <XIcon styles="drop-shadow-[0_0_6px] drop-shadow-x-green" />}
-      {state.claimed === "O" && <OIcon styles="drop-shadow-[0_0_6px] drop-shadow-o-purple" />}
+      {state.claimed === "X" && <XIcon className="drop-shadow-[0_0_6px] drop-shadow-x-green" />}
+      {state.claimed === "O" && <OIcon className="drop-shadow-[0_0_6px] drop-shadow-o-purple" />}
       </button>
     </li>
   )

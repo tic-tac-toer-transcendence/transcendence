@@ -106,7 +106,7 @@ export default function CreateUserForm() {
                 hover:shadow-sidebar hover:shadow-x-green peer-checked:shadow-sidebar peer-checked:shadow-x-green
               `}
             >
-              <XIcon />
+              <XIcon className="" />
             </label>
           </div>
           <div>
@@ -129,7 +129,7 @@ export default function CreateUserForm() {
                 hover:shadow-sidebar hover:shadow-o-purple peer-checked:shadow-sidebar peer-checked:shadow-o-purple
               `}
             >
-              <OIcon />
+              <OIcon className="" />
             </label>
           </div>
         </div>

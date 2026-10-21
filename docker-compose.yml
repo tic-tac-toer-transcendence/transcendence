@@ -1,12 +1,27 @@
 name: transcendence
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    build: ./src/nginx
+    networks:
+      - transcendence
+    depends_on:
+      - frontend
+    ports:
+      - 80:80
+      - 443:443
+
   frontend:
     container_name: frontend
     image: frontend
     build: ./src/frontend
-    ports: 
-      - 3000:3000
+    networks:
+        - transcendence
+    expose: 
+      - "3000"
+
   backend:
     container_name: backend
     image: backend
@@ -26,5 +41,16 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
 volumes:
   db_data:
+
+networks:
+  transcendence:
+    driver: bridge
+
+secrets:
+  nginx-key:
+    file: secrets/nginx.key
+  nginx-crt:
+    file: secrets/nginx.crt

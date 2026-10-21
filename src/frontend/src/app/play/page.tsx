@@ -1,10 +1,11 @@
-import Board, { BoardProps } from "@/components/board/board"
+import Board from "@/components/board/board"
+import { stepOneBoardState } from "@/components/board/presets"
 
 export default function Play() {
 
   return (
     <main className="flex justify-center grow items-center">
-      <Board fields={initBoardState.fields} />
+      <Board state={stepOneBoardState()} />
     </main>
   )
 }
