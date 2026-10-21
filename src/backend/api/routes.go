@@ -6,8 +6,17 @@ import (
 
 func RegisterRoutes(r *gin.Engine) {
 	r.POST("/register", RegisterHandler)
-	r.GET("/users", GetUsersHandler)
-	r.GET("/users/count", GetUserCountHandler)
-	r.DELETE("/users/:id", DeleteUserHandler)
-	r.GET("/ws/game/:id", GameSocketHandler)
+	r.POST("/login", LoginHandler)
+
+	auth := r.Group("/")
+	auth.Use(SessionMiddleware)
+	//also one liner is valid: auth := r.Group("/", SessionMidlleware)
+	{ //in this case just visual - not needed here
+		auth.GET("/users", GetUsersHandler)
+		auth.GET("/users/count", GetUserCountHandler)
+		auth.DELETE("/users/:id", DeleteUserHandler)
+		auth.GET("/ws/game/:id", GameSocketHandler)
+		auth.POST("/logout", LogoutHandler)
+	}
+
 }

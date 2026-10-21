@@ -1,12 +1,38 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 	"tac-backend/database"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgconn"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
+
+func handleDBError(c *gin.Context, err error) bool {
+	if err == nil {
+		return false
+	}
+	if errors.Is(err, gorm.ErrDuplicatedKey) {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.ConstraintName {
+			case "uni_users_email":
+				respondError(c, http.StatusConflict, "email_taken", nil)
+				return true
+			case "uni_users_username":
+				respondError(c, http.StatusConflict, "username_taken", nil)
+				return true
+			}
+		}
+		respondError(c, http.StatusConflict, "duplicate", nil)
+		return true
+	}
+	respondError(c, http.StatusInternalServerError, "server_error", err)
+	return true
+}
 
 func RegisterHandler(c *gin.Context) {
 	var req struct {
@@ -17,7 +43,7 @@ func RegisterHandler(c *gin.Context) {
 	}
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		respondError(c, http.StatusBadRequest, "validation_fail", err)
 		return
 	}
 	hash, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
@@ -30,12 +56,11 @@ func RegisterHandler(c *gin.Context) {
 	}
 	result := database.DB.Create(&user)
 	if result.Error != nil {
-		c.JSON(http.StatusConflict, gin.H{"error": "Username or email already exists"}) //* error return not perfect here
+		handleDBError(c, result.Error)
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{
+	respondOK(c, http.StatusCreated, gin.H{
 		"id":       user.ID,
 		"username": user.Username,
 	})
-
 }
