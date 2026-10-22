@@ -1,9 +1,11 @@
+import Board from "@/components/board/board"
+import { stepOneBoardState } from "@/components/board/presets"
+
 export default function Play() {
-	const someVar = 5;
-	return (
-		<main className="flex">
-			<section>Put game here</section>
-			<section>{someVar + someVar}</section>
-		</main>
-	)
+
+  return (
+    <main className="flex justify-center grow items-center">
+      <Board state={stepOneBoardState()} />
+    </main>
+  )
 }

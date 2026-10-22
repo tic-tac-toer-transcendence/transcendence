@@ -15,7 +15,9 @@
   --color-button-bg: #161926;
   --color-button-border: var(--color-section-border);
   --color-x-green: #a9ff41;
-  --color-o: #b067ff;
+  --color-x-green-dim: rgba(169, 255, 65, 0.2);
+  --color-o-purple: #b067ff;
+  --color-o-purple-dim: rgba(176, 103, 255, 0.2);
   --shadow-sidebar: 0 0 8px --color-x-green;
 }
 
