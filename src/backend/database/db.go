@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"log"
 	"os"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 
-func InitDB() {	
-	dsn := fmt.Sprintf (
+func InitDB() {
+	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable",
 		os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_USER"),
@@ -19,14 +20,14 @@ func InitDB() {
 		os.Getenv("POSTGRES_DB"),
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config {
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		TranslateError: true,
 	})
 	if err != nil {
 		log.Fatal("could not connect to the database: ", err)
 	}
 
-	err = db.AutoMigrate(&User{}, &GameStats{}, &Game{}, &Message{}, &Friend{})
+	err = db.AutoMigrate(&User{}, &GameStats{}, &Game{}, &Message{}, &Friend{}, &Session{})
 	if err != nil {
 		log.Fatal("database migrations fail: ", err)
 	}

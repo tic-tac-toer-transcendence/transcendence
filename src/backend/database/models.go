@@ -40,6 +40,13 @@ type User struct {
 	CreatedAt  time.Time
 }
 
+type Session struct {
+	Token     string    `gorm:"primaryKey"`
+	UserID    string    `gorm:"not null;index"`
+	ExpiresAt time.Time `gorm:"not null;index"`
+	CreatedAt time.Time
+}
+
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	if u.ID == "" {
 		u.ID = uuid.New().String()
