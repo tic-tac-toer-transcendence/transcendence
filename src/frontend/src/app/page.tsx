@@ -1,6 +1,5 @@
 import Board from "@/components/board/board";
 import Rules from "@/components/rules"
-import { heroBoardState } from "@/components/board/presets";
 import Link from "next/link";
 
 export default function Home() {
@@ -19,7 +18,7 @@ export default function Home() {
           </div>
         </div>
         <div className="bg-section-bg border-2 rounded-3xl border-section-border p-8 max-w-lg w-full h-fit">
-          <Board state={heroBoardState()} />
+          <Board />
         </div>
       </section>
       <Rules />
