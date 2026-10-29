@@ -61,7 +61,7 @@ export default async function createUserAction(prevState: CreateUserState, formD
   if (error)
     return (newState);
 
-  const res = await fetch("http://localhost:8080/register", {
+  const res = await fetch("http://backend:8080/register", {
     method: "POST",
     body: JSON.stringify({
       "email": newState.email,
@@ -72,7 +72,7 @@ export default async function createUserAction(prevState: CreateUserState, formD
   })
 
   if (res.ok) {
-    redirect("/")
+    redirect("/login")
   }
 
   newState.genderError = await res.text();
