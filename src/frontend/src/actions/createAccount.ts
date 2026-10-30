@@ -1,6 +1,6 @@
 "use server"
 
-import { CreateUserState } from "./form";
+import { CreateUserState } from "@/app/create-account/form";
 import { z } from "zod" 
 import { redirect } from "next/navigation"
 
@@ -17,7 +17,7 @@ const registerSchema = z.object({
   password: passwordSchema,
 })
 
-export default async function createUserAction(prevState: CreateUserState, formData: FormData) {
+export default async function createAccountAction(prevState: CreateUserState, formData: FormData) {
   let error = false;
   const formValidation = registerSchema.safeParse({
     email: formData.get("email"),
@@ -61,7 +61,7 @@ export default async function createUserAction(prevState: CreateUserState, formD
   if (error)
     return (newState);
 
-  const res = await fetch("http://backend:8080/register", {
+  const res = await fetch(`http://backend:8080/register`, {
     method: "POST",
     body: JSON.stringify({
       "email": newState.email,

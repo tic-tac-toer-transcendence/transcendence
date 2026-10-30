@@ -1,53 +1,12 @@
-ARG NODE_VERSION=24-alpine
-# ============ Stage 1: Dependency Installation ============
+FROM node:24-alpine
 
-FROM node:${NODE_VERSION} AS deps
 WORKDIR /app
 
-# Only copy dependency manifests, leverage Docker cache
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# ============ Stage 2: Build Application ============
-
-FROM node:${NODE_VERSION} AS builder
-WORKDIR /app
-
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# Copy dependencies and source code
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-
-RUN npm run build
-
-# ============ Stage 3: Production Runtime ============
-
-FROM node:${NODE_VERSION} AS runner
-WORKDIR /app
-
-# Set production environment variables
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-# Create non-root user (security best practice)
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy public folder (static resources)
-COPY --from=builder /app/public ./public
-
-# Copy standalone output
-COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
-# Copy static files (CSS/JS build artifacts)
-COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
-
-USER nextjs
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["npm", "run", "dev"]
