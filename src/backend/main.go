@@ -6,6 +6,7 @@ import (
 
 	"tac-backend/api"
 	"tac-backend/database"
+	"tac-backend/internal/game"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,12 @@ func main() {
 	r := gin.Default() // creates Gin router with logger and recovery (default middleware)
 
 	api.RegisterRoutes(r) // registers all routes to Gins Engine table
+
+	// ===== TEMP: Test Functions
+	if err := game.NewInstance("123", "X", "456"); err != nil {
+		log.Fatal("Failed to initialize new game instance: ", err)
+	}
+	// ===== TEMP END ======
 
 	if err := r.Run(); err != nil { // listen on socket
 		log.Fatal("Failed to start server: ", err) //eg. Port already in use
