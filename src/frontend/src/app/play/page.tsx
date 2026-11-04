@@ -1,10 +1,11 @@
-import Sidebar from "@/components/sidebar"
+import Board from "@/components/board/board"
+import { stepOneBoardState } from "@/components/board/presets"
 
 export default function Play() {
-	return (
-		<main className="flex">
-			<Sidebar></Sidebar>
-			Under construction
-		</main>
-	)
+
+  return (
+    <main className="flex justify-center grow items-center">
+      <Board state={stepOneBoardState()} />
+    </main>
+  )
 }
