@@ -7,11 +7,15 @@ import (
 	"tac-backend/database"
 )
 
+func NewGameID(Player1ID string, Player2ID string) string {
+	return Player1ID + "-" + Player2ID + "-" + time.Now().Format("20060102150405") // this can be more complex, but for now this is enough to generate a unique ID
+}
+
 func NewInstance(Player1ID string, Player1Sym database.PlaySymbol, Player2ID string) (err error) {
 
 	newGame := new(database.Game)
 	
-	newGame.ID = "a1b2c32-ha5h-1d-wh4t3v3r"       // what should this ID be?
+	newGame.ID = NewGameID(Player1ID, Player2ID)       // how about this?
 
 	newGame.Player1ID = Player1ID
 	// newGame.Player1                            // -> database.User
