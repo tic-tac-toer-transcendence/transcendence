@@ -32,7 +32,7 @@ export default async function Sidebar() {
             <SidebarLink path="/" text="Home">
               <HomeIcon />
             </SidebarLink>
-            <SidebarLink path="/play" text="Play">
+            <SidebarLink path="/find-game" text="Play">
               <PlayIcon />
             </SidebarLink>
             <SidebarLink path="/ws-test" text="WS Test">
