@@ -35,6 +35,7 @@ func GetMove(g *game.Instance, iterations int) game.Move {
 // Takes a game instance and makes a random valid move
 func randomMove(g *game.Instance) {
 	// Find whos turn it is
+		// Try a version that recognizes two cells it can turn into a winning field!
 	// Chose a random field if possible or the one you have to use
 	// Chose a random free cell in that field
 }
