@@ -4,7 +4,17 @@ import (
 	"strings"
 )
 
-func (inst *Instance) MakeMove(player string, field uint8, cell uint8) error {
+type Move struct {
+	Field  uint8
+	Cell   uint8
+	Player string
+}
+
+func (inst *Instance) MakeMove(move Move) error {
+
+	player := move.Player
+	field  := move.Field
+	cell   := move.Cell
 
 	// Validate identifier
 	player = strings.ToUpper(player)
@@ -52,6 +62,7 @@ func (inst *Instance) MakeMove(player string, field uint8, cell uint8) error {
 	}
 
 	inst.round = inst.round + 1
+	inst.lastMove = move
 	inst.crossTurn = !inst.crossTurn
 
 	return nil

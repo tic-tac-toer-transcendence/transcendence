@@ -14,6 +14,7 @@ type Instance struct {
 	round          int     // how many rounds have been played
 	fieldWinner [9]uint8   // who won this field? none yet(0), cross(1), circle(2), tied(4)
 	nextField      uint8   // which field the next move must land; 9 -> free choice
+	lastMove       Move    // last move, initialized with bullshit, to send to opponent session
 }
 
 func NewInstance(first string) (err error, inst *Instance){
@@ -35,10 +36,27 @@ func NewInstance(first string) (err error, inst *Instance){
 
 	// Set next field
 	g.nextField = 9
+	g.lastMove = Move{Player: "None", Field: 67, Cell: 67}
 
 	return nil, g
 }
 
 func (inst *Instance) Round() int {
 	return inst.round
+}
+
+func (inst *Instance) LastMove() Move {
+	return inst.lastMove
+}
+
+func (inst *Instance) NextField() uint8 {
+	return inst.nextField
+}
+
+func (inst *Instance) CurrentPlayer() string {
+	if inst.crossTurn {
+		return "X"
+	} else {
+		return "O"
+	}
 }
