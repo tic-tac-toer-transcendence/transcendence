@@ -12,7 +12,7 @@ import (
 * The AI should come in 3 difficulties:
 * - Noob: Fields are choosen completely at random
 * - Pro:  The AI makes quite good moves
-* - God:  The AI plays a mathematically perfect game
+* - God:  The AI plays a mathematically perfect game (MCTS)
 *
 */
 
