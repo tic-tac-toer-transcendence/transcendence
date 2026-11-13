@@ -2,15 +2,42 @@ package main
 
 import (
 	"log"
-	"time"
+	"fmt"
 
-	"tac-backend/api"
-	"tac-backend/database"
+	// "tac-backend/api"
+	// "tac-backend/database"
 	"tac-backend/internal/game"
 
-	"github.com/gin-gonic/gin"
+	// "github.com/gin-gonic/gin"
 )
 
+func main() {
+	fmt.Println("Lets start again")
+
+	instErr, g := game.NewInstance("x")
+	if instErr != nil {
+		log.Printf("Could not create a new game instance: %s\n", instErr)
+	}
+
+	fmt.Printf("Round: %d\n", g.Round())
+	g.Display()
+
+	if err := g.MakeMove("x", 1, 3); err != nil {
+		log.Printf("Failed to make a move: %s\n", err)
+	}
+
+	fmt.Printf("Round: %d\n", g.Round())
+	g.Display()
+	
+	if err := g.MakeMove("o", 3, 0); err != nil {
+		log.Printf("Failed to make a move: %s\n", err)
+	}
+
+	fmt.Printf("Round: %d\n", g.Round())
+	g.Display()
+}
+
+/*
 func main() {
 
 	time.Sleep(5 * time.Second) //! TEMP Fix: later add health check for database
@@ -20,16 +47,11 @@ func main() {
 
 	api.RegisterRoutes(r) // registers all routes to Gins Engine table
 
-	// ===== TEMP: Test Functions
-	if err := game.NewInstance("123", "X", "456"); err != nil {
-		log.Fatal("Failed to initialize new game instance: ", err)
-	}
-	// ===== TEMP END ======
-
 	if err := r.Run(); err != nil { // listen on socket
 		log.Fatal("Failed to start server: ", err) //eg. Port already in use
 	}
 }
+/*
 
 /* Game
 func main() {
