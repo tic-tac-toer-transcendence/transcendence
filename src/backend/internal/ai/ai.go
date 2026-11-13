@@ -37,3 +37,23 @@ func GetMove(g *game.Instance, iterations int) game.Move {
 
 	return game.Move{Player: player, Field: field, Cell: cell}
 }
+
+// Don't use on the actual game instance since this one changes it
+// Function below makes a copy first
+// Takes a game instance and makes a random valid move
+func randomMove(g *game.Instance) {
+	// Find whos turn it is
+	// Chose a random field if possible or the one you have to use
+	// Chose a random free cell in that field
+}
+
+// Doesn't change actual instance, references by copy
+func simulateGame(g game.Instance) uint8 {
+	for true {
+		randomMove(&g)
+		if res := g.Winner(); res != 0 {
+			return res
+		}
+	}
+	return 0
+}

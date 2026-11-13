@@ -10,9 +10,9 @@ type Instance struct {
 	board      [81]uint8
 	crossTurn      bool    // is it at this moment the turn of Cross (true) or Circle (false)
 	gameOver       bool    // does the whole game already have an outcome
-	winner         uint8   // who won: none(0), cross(1), cirle(2)
+	winner         uint8   // who won: none(0), cross(1), cirle(2), tie(3)
 	round          int     // how many rounds have been played
-	fieldWinner [9]uint8   // who won this field? none yet(0), cross(1), circle(2), tied(4)
+	fieldWinner [9]uint8   // who won this field? none yet(0), cross(1), circle(2), tied(3)
 	nextField      uint8   // which field the next move must land; 9 -> free choice
 	lastMove       Move    // last move, initialized with bullshit, to send to opponent session
 }
@@ -51,6 +51,10 @@ func (inst *Instance) LastMove() Move {
 
 func (inst *Instance) NextField() uint8 {
 	return inst.nextField
+}
+
+func (inst *Instance) Winner() uint8 {
+	return inst.winner
 }
 
 func (inst *Instance) CurrentPlayer() string {
