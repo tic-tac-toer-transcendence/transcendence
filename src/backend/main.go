@@ -53,7 +53,7 @@ func main() {
 	fmt.Printf("Round: %d\n", g.Round())
 	g.Display()
 
-	if err := g.MakeMove(ai.GetMove(g, 0)); err != nil {
+	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
 		log.Printf("Failed to make a move: %s\n", err)
 	}
 

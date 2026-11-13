@@ -43,7 +43,7 @@ func (inst *Instance) MakeMove(move Move) error {
 	// Validate correct field
 	if field != inst.nextField && inst.nextField != 9 {
 		return ErrWrongField
-	} else if inst.nextField == 9 && inst.fieldWinner != 0 { // Depends on variant; Other variant allows won/tied field until all cells are filled -> better strategy
+	} else if inst.nextField == 9 && inst.fieldWinner[field] != 0 { // Depends on variant; Other variant allows won/tied field until all cells are filled -> better strategy
 		return ErrWrongField
 	}
 
