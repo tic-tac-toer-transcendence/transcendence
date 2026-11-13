@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/sidebar";
-import PresenceProvider from "@/providers/presence";
+import UserProvider from "@/providers/presence";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -21,10 +21,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${outfit.variable}  h-full antialiased`}
     >
       <body className="min-h-full flex">
-        <PresenceProvider>
+        <UserProvider>
           <Sidebar />
           {children}
-        </PresenceProvider>
+        </UserProvider>
       </body>
     </html>
   );

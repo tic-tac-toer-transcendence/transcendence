@@ -2,12 +2,28 @@
 
 import { createContext, useContext, useEffect, useRef } from "react";
 
-const PresenceContext = createContext<WebSocket | null>(null);
+export interface User {
+  ws: WebSocket | null;
+  loggedIn: boolean;
+  id: string | null;
+}
 
-export default function PresenceProvider({ children }: { children: React.ReactNode }) {
-  const wsRef = useRef<WebSocket | null>(null);
+const PresenceContext = createContext<User>({
+  ws: null,
+  loggedIn: false,
+  id: null
+});
+
+export default function UserProvider({ children }: { children: React.ReactNode }) {
+  const userRef = useRef<User>({
+    ws: null,
+    loggedIn: false,
+    id: null
+  });
 
   function presenceConnect() {
+    if (!userRef.current.loggedIn)
+      return ;
     const ws = new WebSocket("https://localhost/api/ws/presence");
 
     ws.onopen = function() {
@@ -25,22 +41,26 @@ export default function PresenceProvider({ children }: { children: React.ReactNo
       })
     }
 
-    wsRef.current = ws;
+    userRef.current.ws = ws;
   }
 
   useEffect(() => {
-    if (!wsRef.current) {
+    if (!userRef.current) {
       presenceConnect();
     }
     return () => {
-      if (wsRef.current)
-        wsRef.current.close();
-      wsRef.current = null;
+      if (userRef.current.ws)
+        userRef.current.ws.close();
+      userRef.current = {
+        ws: null,
+        loggedIn: false,
+        id: null
+      };
     };
   }, []);
 
   return (
-    <PresenceContext.Provider value={wsRef.current}>
+    <PresenceContext.Provider value={userRef.current}>
       {children}
     </PresenceContext.Provider>
   );
