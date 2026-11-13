@@ -13,14 +13,6 @@ import (
 * can be made easier or more difficult based on the iterations given
 */
 
-type Level uint8
-
-const (
-    Noob Level = iota
-    Pro
-    God
-)
-
 func GetMove(g *game.Instance, iterations int) game.Move {
 
 	// Ai always plays the players whos turn it is at the moment
