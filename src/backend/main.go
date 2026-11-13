@@ -2,15 +2,30 @@ package main
 
 import (
 	"log"
-	"fmt"
+	"time"
 
-	// "tac-backend/api"
-	// "tac-backend/database"
-	"tac-backend/internal/game"
+	"tac-backend/api"
+	"tac-backend/database"
+	// "tac-backend/internal/game"
 
-	// "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
+func main() {
+
+	time.Sleep(5 * time.Second) //! TEMP Fix: later add health check for database
+	database.InitDB()           // init database, will exit on its own if it fails
+
+	r := gin.Default() // creates Gin router with logger and recovery (default middleware)
+
+	api.RegisterRoutes(r) // registers all routes to Gins Engine table
+
+	if err := r.Run(); err != nil { // listen on socket
+		log.Fatal("Failed to start server: ", err) //eg. Port already in use
+	}
+}
+
+/*
 func main() {
 	fmt.Println("Lets start again")
 
@@ -36,22 +51,7 @@ func main() {
 	fmt.Printf("Round: %d\n", g.Round())
 	g.Display()
 }
-
-/*
-func main() {
-
-	time.Sleep(5 * time.Second) //! TEMP Fix: later add health check for database
-	database.InitDB()           // init database, will exit on its own if it fails
-
-	r := gin.Default() // creates Gin router with logger and recovery (default middleware)
-
-	api.RegisterRoutes(r) // registers all routes to Gins Engine table
-
-	if err := r.Run(); err != nil { // listen on socket
-		log.Fatal("Failed to start server: ", err) //eg. Port already in use
-	}
-}
-/*
+*/
 
 /* Game
 func main() {
