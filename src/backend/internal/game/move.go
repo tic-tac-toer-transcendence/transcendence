@@ -42,10 +42,10 @@ func (inst *Instance) MakeMove(player string, field uint8, cell uint8) error {
 
 	// Make actual move
 	inst.board[idx] = ident
+	inst.fieldWinner[field] = inst.WonField(field)
 
 	// Define next field
-	fieldWinner := inst.WonField(cell)
-	if fieldWinner == 0 {
+	if inst.fieldWinner[cell] == 0 {
 		inst.nextField = cell
 	} else {
 		inst.nextField = 9
