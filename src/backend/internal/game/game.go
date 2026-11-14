@@ -10,7 +10,10 @@ import (
 //
 // Turning this option on will allow to still use an already won field
 // for strategic purposes until it is completely filled
-const strategic bool = false // Not yet fully implemented though
+const ModeStrategic bool = false // Not yet fully implemented though
+// According to wikipedia there is a simplified version in which a win can
+// also be achieved by winning 5 fields in any order
+const ModeEasyWin   bool = false
 
 type Instance struct {
 	board      [81]uint8
@@ -20,18 +23,25 @@ type Instance struct {
 	round          int     // how many rounds have been played
 	/*
 	* For fun we are doing bit stuff here:
-	* - 0000 ->  (0) - nobody won
-	* - 0001 ->  (1) - cross won
-	* - 0100 ->  (2) - circle won
-	* - 1000 ->  (8) - tie and full
-	* - 1100 -> (12) - circle won and full
-	* - 1010 -> (10) - cross won and full
+	* - 0000 -> (0) - nobody won
+	* - 0001 -> (1) - cross won
+	* - 0010 -> (2) - circle won
+	* - 0100 -> (4) - tie and full
+	* - 0101 -> (5) - cross won and full
+	* - 0110 -> (6) - circle won and full
 	* => Check is full can be done with a check of 4th bit
 	*/
 	fieldWinner [9]uint8
 	nextField      uint8   // which field the next move must land; 9 -> free choice
 	lastMove       Move    // last move, initialized with bullshit, to send to opponent session
 }
+
+const (
+	Cross   uint8 = 1      // 0b0001
+	Circle  uint8 = 2      // 0b0010
+	Full    uint8 = 4      // 0b0100
+	WinMask uint8 = 0b11   // 0b0011
+)
 
 func NewInstance(first string) (err error, inst *Instance){
 

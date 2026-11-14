@@ -11,9 +11,9 @@ const (
 
 func (inst *Instance) symbol(v uint8) string {
 	switch v {
-	case 1:
+	case Cross:
 		return "X"
-	case 2:
+	case Circle:
 		return "O"
 	default:
 		return " "

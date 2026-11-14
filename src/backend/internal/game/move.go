@@ -12,6 +12,10 @@ type Move struct {
 
 func (inst *Instance) MakeMove(move Move) error {
 
+	if inst.gameOver {
+		return ErrGameOver
+	}
+
 	player := move.Player
 	field  := move.Field
 	cell   := move.Cell
@@ -31,7 +35,7 @@ func (inst *Instance) MakeMove(move Move) error {
 
 	// Validate bounds
 	if field > 8 || cell > 8 {
-		return ErrBadPlayer
+		return ErrOutOfRange
 	}
 
 	// Validate cell being free
@@ -47,9 +51,9 @@ func (inst *Instance) MakeMove(move Move) error {
 		return ErrWrongField
 	}
 
-	var ident uint8 = 1 // TODO: remove magic number
+	var ident uint8 = Cross
 	if player == "O" {
-		ident = 2 // TODO: remove magic number
+		ident = Circle
 	}
 
 	// Make actual move
@@ -66,6 +70,10 @@ func (inst *Instance) MakeMove(move Move) error {
 	inst.round = inst.round + 1
 	inst.lastMove = move
 	inst.crossTurn = !inst.crossTurn
+	inst.winner = inst.WonGame()
+	if inst.winner != 0 {
+		inst.gameOver = true
+	}
 
 	return nil
 }
