@@ -43,7 +43,7 @@ func (inst *Instance) MakeMove(move Move) error {
 	// Validate correct field
 	if field != inst.nextField && inst.nextField != 9 {
 		return ErrWrongField
-	} else if inst.nextField == 9 && inst.fieldWinner[field] != 0 { // Depends on variant; Other variant allows won/tied field until all cells are filled -> better strategy
+	} else if inst.nextField == 9 && inst.fieldWinner[field] != 0 { // TODO: Depends on variant; Other variant allows won/tied field until all cells are filled -> better strategy
 		return ErrWrongField
 	}
 
@@ -56,7 +56,7 @@ func (inst *Instance) MakeMove(move Move) error {
 	inst.board[idx] = ident
 	inst.fieldWinner[field] = inst.WonField(field)
 
-	// Define next field
+	// Define next field // TODO: Also depends on variant i think
 	if inst.fieldWinner[cell] == 0 {
 		inst.nextField = cell
 	} else {

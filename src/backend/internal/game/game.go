@@ -6,13 +6,29 @@ import (
 	"strings"
 )
 
+// The typical game variant counts a won field in the board as unplayable
+//
+// Turning this option on will allow to still use an already won field
+// for strategic purposes until it is completely filled
+const strategic bool = false // Not yet fully implemented though
+
 type Instance struct {
 	board      [81]uint8
 	crossTurn      bool    // is it at this moment the turn of Cross (true) or Circle (false)
 	gameOver       bool    // does the whole game already have an outcome
 	winner         uint8   // who won: none(0), cross(1), cirle(2), tie(3)
 	round          int     // how many rounds have been played
-	fieldWinner [9]uint8   // who won this field? none yet(0), cross(1), circle(2), tied(3)
+	/*
+	* For fun we are doing bit stuff here:
+	* - 0000 ->  (0) - nobody won
+	* - 0001 ->  (1) - cross won
+	* - 0100 ->  (2) - circle won
+	* - 1000 ->  (8) - tie and full
+	* - 1100 -> (12) - circle won and full
+	* - 1010 -> (10) - cross won and full
+	* => Check is full can be done with a check of 4th bit
+	*/
+	fieldWinner [9]uint8
 	nextField      uint8   // which field the next move must land; 9 -> free choice
 	lastMove       Move    // last move, initialized with bullshit, to send to opponent session
 }
