@@ -37,10 +37,12 @@ type Instance struct {
 }
 
 const (
-	Cross   uint8 = 1      // 0b0001
-	Circle  uint8 = 2      // 0b0010
-	Full    uint8 = 4      // 0b0100
-	WinMask uint8 = 0b11   // 0b0011
+	Cross      uint8 = 1      // 0b0001
+	Circle     uint8 = 2      // 0b0010
+	Full       uint8 = 4      // 0b0100
+	WinMask    uint8 = 0b11   // 0b0011
+	FreeChoice uint8 = 9
+	Garbage    uint8 = 67
 )
 
 func NewInstance(first string) (err error, inst *Instance){
@@ -61,8 +63,8 @@ func NewInstance(first string) (err error, inst *Instance){
 	}
 
 	// Set next field
-	g.nextField = 9
-	g.lastMove = Move{Player: "None", Field: 67, Cell: 67}
+	g.nextField = FreeChoice
+	g.lastMove = Move{Player: "None", Field: Garbage, Cell: Garbage}
 
 	return nil, g
 }

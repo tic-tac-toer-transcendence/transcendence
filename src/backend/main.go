@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 	"fmt"
-	// "time"
+	"time"
+	"math/rand"
 
 	// "tac-backend/api"
 	// "tac-backend/database"
@@ -29,6 +30,9 @@ func main() {
 */
 
 func main() {
+
+	rand.Seed(time.Now().UnixNano())
+
 	fmt.Println("Lets start again")
 
 	instErr, g := game.NewInstance("x")
@@ -37,6 +41,8 @@ func main() {
 	}
 
 	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
 	g.Display()
 
 	if err := g.MakeMove(game.Move{Player: "x", Field: 1, Cell: 3}); err != nil {
@@ -44,6 +50,8 @@ func main() {
 	}
 
 	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
 	g.Display()
 	
 	if err := g.MakeMove(game.Move{Player: "o", Field: 3, Cell: 0}); err != nil {
@@ -51,6 +59,8 @@ func main() {
 	}
 
 	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
 	g.Display()
 
 	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
@@ -58,7 +68,17 @@ func main() {
 	}
 
 	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
 	g.Display()
+
+	ai.SimulateGame(g)
+
+	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
+	g.Display()
+	fmt.Printf("The winner is: %d\n", g.Winner())
 }
 
 /* Game

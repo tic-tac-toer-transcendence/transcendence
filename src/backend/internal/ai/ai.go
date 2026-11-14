@@ -2,6 +2,7 @@ package ai
 
 import (
 	"tac-backend/internal/game"
+	"math/rand"
 )
 
 /*
@@ -34,16 +35,25 @@ func GetMove(g *game.Instance, iterations int) game.Move {
 // Function below makes a copy first
 // Takes a game instance and makes a random valid move
 func randomMove(g *game.Instance) {
-	// Find whos turn it is
-		// Try a version that recognizes two cells it can turn into a winning field!
+
 	// Chose a random field if possible or the one you have to use
+	fields := g.FreeFields()
+	idx    := rand.Intn(len(fields))
+    field  := fields[idx]
+
+	// Chose a completely random cell
+	cells  := g.FreeCells(field)
+	idx     = rand.Intn(len(cells))
+	cell   := cells[idx]
+
 	// Chose a random free cell in that field
+	var move = game.Move{Player: g.CurrentPlayer(), Field: field, Cell: cell}
+	g.MakeMove(move)
 }
 
-// Doesn't change actual instance, references by copy
-func simulateGame(g game.Instance) uint8 {
+func SimulateGame(g *game.Instance) uint8 {//TODO: make private and reference by COPY
 	for true {
-		randomMove(&g)
+		randomMove(g)
 		if res := g.Winner(); res != 0 {
 			return res
 		}

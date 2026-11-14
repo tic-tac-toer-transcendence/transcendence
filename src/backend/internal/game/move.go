@@ -45,9 +45,9 @@ func (inst *Instance) MakeMove(move Move) error {
 	}
 
 	// Validate correct field
-	if field != inst.nextField && inst.nextField != 9 {
+	if field != inst.nextField && inst.nextField != FreeChoice {
 		return ErrWrongField
-	} else if inst.nextField == 9 && inst.fieldWinner[field] != 0 { // TODO: Depends on variant; Other variant allows won/tied field until all cells are filled -> better strategy
+	} else if inst.nextField == FreeChoice && inst.fieldWinner[field] != 0 { // TODO: Depends on variant; Other variant allows won/tied field until all cells are filled -> better strategy
 		return ErrWrongField
 	}
 
@@ -64,7 +64,7 @@ func (inst *Instance) MakeMove(move Move) error {
 	if inst.fieldWinner[cell] == 0 {
 		inst.nextField = cell
 	} else {
-		inst.nextField = 9
+		inst.nextField = FreeChoice
 	}
 
 	inst.round = inst.round + 1
@@ -76,4 +76,30 @@ func (inst *Instance) MakeMove(move Move) error {
 	}
 
 	return nil
+}
+
+func (inst *Instance) FreeFields() []uint8 {
+	vec := []uint8{}
+	if inst.nextField != FreeChoice {
+		vec = append(vec, inst.nextField)
+	} else {
+		for i := uint8(0); i < 9; i++ {
+			// TODO: edit for ModeStrategic
+			if inst.fieldWinner[i] == 0 {
+				vec = append(vec, i)
+			}
+		}
+	}
+	return vec
+}
+
+// TODO: Error handling for fields too high
+func (inst *Instance) FreeCells(field uint8) []uint8 {
+	vec := []uint8{}
+	for i := uint8(0); i < 9; i++ {
+		if inst.board[i+field*9] == 0 {
+			vec = append(vec, i)
+		}
+	}
+	return vec
 }
