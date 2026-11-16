@@ -1,7 +1,48 @@
+"use client"
+
 import XIcon from "@/components/icons/xIcon"
 import OIcon from "@/components/icons/oIcon"
 import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
+
 export default function FindGame() {
+  const wsRef = useRef<WebSocket | null>(null);
+
+  function presenceConnect() {
+    const ws = new WebSocket("wss://localhost/api/ws/presence");
+    
+    ws.onopen = function() {
+      console.log("Connected to presence websocket");
+    }
+
+    ws.onmessage = function(e) {
+      console.log(`Presence: ${e.data}`);
+    }
+
+    ws.onclose = function() {
+      console.log("Disconnected from presence websocket, reconnecting...")
+      setTimeout(() => {
+        presenceConnect()
+      }, 1000)
+    }
+
+    wsRef.current = ws;
+  }
+
+  useEffect(() => {
+    presenceConnect();
+    return (() => {
+      if (wsRef.current) {
+        wsRef.current.onclose = function() {
+          console.log("Disconnected from presence websocket");
+        }
+        wsRef.current.close();
+      }
+    })
+
+  }, [])
+
+  
   return (
     <main className="grow p-12 flex flex-col gap-12 max-h-screen">
       <div className="border-section-border border-2 bg-section-bg p-6 rounded-3xl">

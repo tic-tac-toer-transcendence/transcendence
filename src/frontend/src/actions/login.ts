@@ -35,7 +35,7 @@ export default async function loginAction(prevState: LoginFormState, formData: F
   })
 
   if (res.ok) {
-    redirect("/")
+    redirect("/");
   }
 
   return newState
