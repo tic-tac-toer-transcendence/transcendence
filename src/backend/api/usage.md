@@ -28,7 +28,7 @@ symbol - required, must be either X or O
 
 | Status | Body                                               | When                                   |
 |--------|----------------------------------------------------|----------------------------------------|
-| 201    | `{"id": "<uuid>", "username": "alice"}`            | success                                |
+| 201    | `{"id": "<uuid>", "username": "alice", "symbol": "X"}` | success                            |
 | 400    | `{"error": "validation_fail", "details": { ... }}` | missing/invalid fields                 |
 | 409    | `{"error": "email_taken"}`                         | email already registered               |
 | 409    | `{"error": "username_taken"}`                      | username already registered            |
@@ -71,7 +71,7 @@ password - required
 
 | Status | Body                                               | When                                      |
 |--------|----------------------------------------------------|-------------------------------------------|
-| 200    | `{"id": "<uuid>", "username": "alice"}` + `Set-Cookie: session=...` | success           |
+| 200    | `{"id": "<uuid>", "username": "alice", "symbol": "X"}` + `Set-Cookie: session=...` | success |
 | 400    | `{"error": "validation_fail", "details": { ... }}` | missing/invalid fields                    |
 | 401    | `{"error": "invalid_credentials"}`                 | email not found or password mismatch      |
 | 500    | `{"error": "session_create_failed", "message": "..."}` | session row could not be created      |
@@ -128,11 +128,16 @@ Cookie: session= (browswer automatically sends I guess)
 | 101    | WebSocket upgrade accepted (connection is open)   |
 | 401    | `no_session` / `invalid_session` (not logged in)  |
 
-### Server-pushed message examples
+### Server-pushed messages
 
-```json
-{"type": "game_invite", "fromUser": "<uuid>", "gameId": "<uuid>"}
-```
+| type               | extra fields       | sent to     | when                              |
+|--------------------|--------------------|-------------|-----------------------------------|
+| `game_invite`      | `fromUser: <uuid>`, `username: <inviter name>` | invited | someone invited you |
+| `game_start`       | `gameId: <uuid>`   | both        | invite accepted, open game socket |
+| `invite_declined`  | -                  | inviter     | other person said no              |
+| `invite_cancelled` | -                  | other user  | other person cancelled or left    |
+| `invite_expired`   | -                  | both        | no answer in 30s                  |
+| `invite_failed`    | -                  | inviter     | server error on accept            |
 
 
 ## Online users
@@ -149,6 +154,118 @@ Returns the list of users currently connected via `/ws/presence`.
 
 | Status | Body                                 | When                              |
 |--------|--------------------------------------|-----------------------------------|
-| 200    | `{"online": ["<uuid>", "<uuid>"]}`   | success (list may be empty)       |
+| 200    | `{"online": [{"id": "<uuid>", "username": "bob", "symbol": "O"}]}` | success (list may be empty) |
 | 401    | `{"error": "no_session"}`            | caller not logged in              |
+| 500    | `{"error": "server_error"}`          | DB read failed                    |
+
+The list includes the caller. Use `id` from here as `to` when sending an invite.
+
+## Playing a game (overview)
+
+Actions go over REST, news for the other player comes over their presence socket, moves go over the game socket.
+
 ```
+1. both logged in, both have /ws/presence open
+2. Alice:  POST /invites {"to": "<bob id>"}      -> 201, Alice waits (max 30s)
+           Bob gets push:   game_invite
+3. Bob:    POST /invites/accept                  -> 200 {"gameId"}
+           both get push:   game_start + gameId
+4. both:   open /ws/game/<gameId>                -> each gets "joined"
+5. player whose turn it is sends "move"          -> both get "move" (or sender gets "error")
+6. last move                                     -> both get "game_over", server closes the socket
+```
+
+Inviter is always `X`, invited is always `O`. Who moves first is random, see `turn` in `joined`. - I can change this later if we have time for it (regarding X and O)
+
+## Invites
+
+Only online users who are not in a game or another invite.
+
+```
+POST /invites            Body: {"to": "<uuid>"}
+POST /invites/accept     Body: none (invited user only)
+POST /invites/decline    Body: none (invited = decline, inviter = cancel)
+```
+
+### Returns
+
+| Status | Body                                     | When                             |
+|--------|------------------------------------------|----------------------------------|
+| 201    | `{"status": "invite_sent"}`              | invite sent                      |
+| 200    | `{"gameId": "<uuid>"}`                   | invite accepted                  |
+| 200    | `{"status": "ok"}`                       | declined / cancelled             |
+| 400    | `{"error": "validation_fail"}`           | missing `to`                     |
+| 400    | `{"error": "cannot_invite_self"}`        | invited yourself                 |
+| 401    | `{"error": "no_session"}`                | not logged in                    |
+| 404    | `{"error": "no_invite"}`                 | no invite to accept/decline      |
+| 409    | `{"error": "user_offline"}`              | invited user not online          |
+| 409    | `{"error": "user_busy"}`                 | someone already in game/invite   |
+| 500    | `{"error": "server_error"}`              | game could not be created        |
+
+`no_invite` also happens in normal use: the invite expired or the other user cancelled a moment before the click, a double click, or the inviter calling accept. Just close the invite popup.
+
+### All outcomes of an invite
+
+| What happens                          | Caller gets              | Other user gets (presence push)      |
+|---------------------------------------|--------------------------|--------------------------------------|
+| invited accepts                       | 200 `{"gameId"}`         | `game_start` (caller gets it too)    |
+| invited declines                      | 200 `{"status": "ok"}`   | inviter: `invite_declined`           |
+| inviter cancels (calls decline)       | 200 `{"status": "ok"}`   | invited: `invite_cancelled`          |
+| nobody answers for 30s                | -                        | both: `invite_expired`               |
+| either one goes offline while waiting | -                        | the other: `invite_cancelled`        |
+| accept fails on the server            | 500 `server_error`       | inviter: `invite_failed`             |
+
+After any of these the invite is gone and both users can invite / be invited again.
+
+## Game WebSocket
+
+Open after `game_start` push.
+
+```
+GET /ws/game/<gameId> (WebSocket upgrade)
+```
+
+### Handshake
+
+| Status | When                              |
+|--------|-----------------------------------|
+| 101    | connected                         |
+| 401    | not logged in                     |
+| 403    | `not_your_game`                   |
+| 404    | `game_not_found`                  |
+
+### Client sends
+
+```json
+{"type": "move", "field": 4, "cell": 0}
+```
+
+Always send both `field` and `cell` (0-8, row by row, 0 = top-left). Missing = 0.
+
+### Server sends
+
+| Message                                                           | To     | When                           |
+|-------------------------------------------------------------------|--------|--------------------------------|
+| `{"type": "joined", "you": "X", "turn": "O"}`                     | you    | right after connect            |
+| `{"type": "move", "player": "X", "field": 4, "cell": 0}`          | both   | move accepted                  |
+| `{"type": "error", "error": "cell is already taken"}`             | sender | move rejected                  |
+| `{"type": "game_over", "winner": "X"}`                            | both   | game ended (`null` = draw)     |
+| `{"type": "game_over", "winner": "O", "reason": "opponent_left"}` | player who stayed | opponent left       |
+
+### Move errors
+
+`error` goes only to the sender, the move is not played and the turn does not change. Possible texts:
+
+- `not your turn`
+- `cell is already taken`
+- `you can't play in this field`
+- `field and cell must be 0-8`
+- `game is already over`
+
+### Rules
+
+- The server only sends the last move, never the whole board. Keep the board on the frontend and apply each `move` (including your own) when it arrives.
+- Leaving or refreshing the game page = you lose, there is no reconnect. The opponent gets `game_over` with `reason: opponent_left`.
+- Sending anything that is not valid JSON closes the socket (same as leaving).
+- The server closes the socket after `game_over`. Connecting to the same game again gives 404 `game_not_found`.
+- Closing only the presence socket does not end a running game.

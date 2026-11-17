@@ -62,5 +62,6 @@ func RegisterHandler(c *gin.Context) {
 	respondOK(c, http.StatusCreated, gin.H{
 		"id":       user.ID,
 		"username": user.Username,
+		"symbol":   user.UserSymbol,
 	})
 }

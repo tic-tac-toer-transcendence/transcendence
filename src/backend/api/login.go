@@ -41,14 +41,15 @@ func LoginHandler(c *gin.Context) {
 		"session", //name of the cookie
 		token,     //name of the value
 		60*60*24*7,
-		"/",   //path
-		"",    //domain (nothing for default)
-		false, //!when NGINX change to true
-		true,  //cant read cookie (XSS proteciton)
+		"/", //path
+		"",  //domain (nothing for default)
+		true,
+		true, //cant read cookie (XSS proteciton)
 	)
 	respondOK(c, http.StatusOK, gin.H{
 		"id":       user.ID,
 		"username": user.Username,
+		"symbol":   user.UserSymbol,
 	})
 
 }

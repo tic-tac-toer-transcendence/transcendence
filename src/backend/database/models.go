@@ -34,7 +34,7 @@ type User struct {
 	ID         string     `gorm:"primaryKey"`
 	Username   string     `gorm:"unique;not null"`
 	Email      string     `gorm:"unique;not null"`
-	PassHash   string     `gorm:"not null"` //! add _ to exclude hash from sending
+	PassHash   string     `gorm:"not null" json:"-"`
 	ProfileURL *string    // as pointer can be null!!!
 	UserSymbol PlaySymbol `gorm:"not null"`
 	CreatedAt  time.Time
