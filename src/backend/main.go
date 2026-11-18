@@ -2,18 +2,13 @@ package main
 
 import (
 	"log"
-	"fmt"
 	"time"
-	"math/rand"
 
-	// "tac-backend/api"
-	// "tac-backend/database"
-	"tac-backend/internal/game"
-	"tac-backend/internal/ai"
-	// "github.com/gin-gonic/gin"
+	"tac-backend/api"
+	"tac-backend/database"
+	"github.com/gin-gonic/gin"
 )
 
-/*
 func main() {
 
 	time.Sleep(5 * time.Second) //! TEMP Fix: later add health check for database
@@ -27,7 +22,23 @@ func main() {
 		log.Fatal("Failed to start server: ", err) //eg. Port already in use
 	}
 }
-*/
+
+// ================================================================================================
+// The part below is to experiment with functions without needing the database
+// to be initialized
+// ================================================================================================
+
+/*
+import (
+	"log"
+	"fmt"
+	"time"
+	"math/rand"
+
+	"tac-backend/internal/game"
+	"tac-backend/internal/ai"
+)
+
 
 func main() {
 
@@ -79,20 +90,5 @@ func main() {
 	fmt.Println()
 	g.Display()
 	fmt.Printf("The winner is: %d\n", g.Winner())
-}
-
-/* Game
-func main() {
-	var test = new(game.Session)
-	test.Selected = game.Unpositioned
-	test.Winner = game.Ownerless
-	player := game.Owner(rand.IntN(2) + int(game.Cross))
-	var cmd string
-
-	fmt.Println("---\nWe are now selecting the MidMid field\n---")
-	test.SelectBoard(game.MidMid)
-
-	test.Display()
-	fmt.Println()
 }
 */
