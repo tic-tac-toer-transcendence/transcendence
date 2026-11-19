@@ -20,7 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${outfit.variable}  h-full antialiased`}
     >
-      <body className="min-h-full flex">
+      <body className="min-h-full max-w-screen w-full flex">
         <Sidebar />
         {children}
       </body>

@@ -13,7 +13,7 @@ export default async function Sidebar() {
   const cookieStore = await cookies();
 
   return (
-    <aside className="h-screen w-[250] bg-section-bg border-r-2 border-section-border sticky top-0 left-0">
+    <aside className="h-screen basis-64 shrink-0 bg-section-bg border-r-2 border-section-border sticky top-0 left-0">
       <nav className="p-[24] h-full flex flex-col justify-between">
         <section className="flex flex-col gap-[16]">
           <button>
