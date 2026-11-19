@@ -219,7 +219,7 @@ After any of these the invite is gone and both users can invite / be invited aga
 
 ## Game WebSocket
 
-Open after `game_start` push.
+Open after `game_start` push (game vs a person) or after `POST /games/bot` (game vs computer). Same socket and same messages for both.
 
 ```
 GET /ws/game/<gameId> (WebSocket upgrade)
@@ -262,6 +262,18 @@ Always send both `field` and `cell` (0-8, row by row, 0 = top-left). Missing = 0
 - `field and cell must be 0-8`
 - `game is already over`
 
+### Where can I play
+
+The server checks this on every move, so the frontend can use the same rules to highlight the allowed field:
+
+- First move of the game: any field.
+- After that: the `cell` of the last move decides the next `field`. Last move was `field 4, cell 0` -> next player must play in `field 0`.
+- If that field is already won or full: next player can pick any field that is not won or full.
+- A won or full field can never be played in again.
+- Three won fields in a row (row, column or diagonal) wins the game. All 9 fields decided with no row = draw (`"winner": null`).
+
+Wrong field gives `you can't play in this field`.
+
 ### Rules
 
 - The server only sends the last move, never the whole board. Keep the board on the frontend and apply each `move` (including your own) when it arrives.
@@ -269,3 +281,44 @@ Always send both `field` and `cell` (0-8, row by row, 0 = top-left). Missing = 0
 - Sending anything that is not valid JSON closes the socket (same as leaving).
 - The server closes the socket after `game_over`. Connecting to the same game again gives 404 `game_not_found`.
 - Closing only the presence socket does not end a running game.
+
+## Bot game (vs computer)
+
+
+
+```
+POST /games/bot
+
+Body: none
+```
+
+### Returns
+
+| Status | Body                              | When                                     |
+|--------|-----------------------------------|------------------------------------------|
+| 201    | `{"gameId": "<uuid>"}`            | game created, open the game socket       |
+| 401    | `{"error": "no_session"}`         | not logged in                            |
+| 409    | `{"error": "user_busy"}`          | you are already in a game or an invite   |
+| 500    | `{"error": "server_error"}`       | game could not be created                |
+
+### How it goes
+
+```
+1. POST /games/bot                      -> 201 {"gameId"}
+2. open /ws/game/<gameId>               -> "joined"
+3. you send "move"                      -> you get your "move" back
+                                           then right away the bot's "move"
+4. repeat 3 until                       -> "game_over"
+```
+
+- You keep your own symbol (the one from register), the bot gets the other one.
+- You always move first, so `joined` has the same symbol in `you` and `turn`.
+- The bot's move looks exactly like a person's move: `{"type": "move", "player": "O", "field": 0, "cell": 3}`. Nothing special to handle.
+- Errors and `game_over` are the same as in a game vs a person.
+- Leaving the page just ends the game. Nobody gets `opponent_left` because there is nobody else.
+- Bot games are not saved in the database.
+- While you are in a bot game you count as busy: nobody can invite you.
+
+### Not finished yet 
+
+Function (AI get move) from game team is not fully complete. Crash, Lock or similar is possible

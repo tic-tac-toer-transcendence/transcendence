@@ -15,10 +15,10 @@ import (
 
 type room struct {
 	mu      sync.Mutex                 //2 websockets (2 players) accessing
-	g       *game.Game                 //game object or whatever will be called
-	players map[string]game.Owner      //cross or circle for both (I use Owner type)
+	g       *game.Instance             //game object or whatever will be called
+	players map[string]string          //cross or circle for both (I use Owner type)
 	conns   map[string]*websocket.Conn //websocket connections
-	bot     game.Owner                 //when its human v AI
+	bot     string                     //when its human v AI
 	done    bool
 }
 
@@ -37,11 +37,12 @@ func createBotRoom(userID string) (string, error) {
 		return "", err
 	}
 
-	human, bot := game.Cross, game.Circle
+	human, bot := "X", "O"
 	if user.UserSymbol == database.SymbolO {
-		human, bot = game.Circle, game.Cross
+		human, bot = "O", "X"
 	}
-	g, err := game.NewGame(human) //we will have human move first
+
+	err, g := game.NewInstance(human) //human always moves first
 	if err != nil {
 		return "", err
 	}
@@ -51,7 +52,7 @@ func createBotRoom(userID string) (string, error) {
 	rooms.mu.Lock()
 	rooms.byID[gameID] = &room{
 		g:       g,
-		players: map[string]game.Owner{userID: human},
+		players: map[string]string{userID: human},
 		conns:   map[string]*websocket.Conn{},
 		bot:     bot,
 	}
@@ -60,7 +61,7 @@ func createBotRoom(userID string) (string, error) {
 	return gameID, nil
 }
 
-func endGame(gameID string, r *room, winner game.Owner) {
+func endGame(gameID string, r *room, winner string) {
 	var winnerID *string
 	for userID, symbol := range r.players {
 		if symbol == winner {
@@ -68,7 +69,7 @@ func endGame(gameID string, r *room, winner game.Owner) {
 		}
 	}
 
-	if r.bot == game.Ownerless { // also we dont save bot games in db (possibly none games at all)
+	if r.bot == "" {
 		if err := database.FinishGame(gameID, winnerID); err != nil {
 			log.Println("could not save game result:", err)
 		}
@@ -81,12 +82,12 @@ func endGame(gameID string, r *room, winner game.Owner) {
 
 func createRoom(player1ID, player2ID string) (string, error) {
 
-	first := game.Cross
+	first := "X"
 	if rand.IntN(2) == 1 {
-		first = game.Circle
+		first = "O"
 	}
 
-	g, err := game.NewGame(first)
+	err, g := game.NewInstance(first)
 	if err != nil {
 		return "", err
 	}
@@ -99,9 +100,9 @@ func createRoom(player1ID, player2ID string) (string, error) {
 	rooms.mu.Lock()
 	rooms.byID[gameID] = &room{
 		g:       g,
-		players: map[string]game.Owner{player1ID: game.Cross, player2ID: game.Circle},
+		players: map[string]string{player1ID: "X", player2ID: "O"},
 		conns:   map[string]*websocket.Conn{},
-		bot:     game.Ownerless,
+		bot:     "",
 	}
 	rooms.mu.Unlock()
 
@@ -116,7 +117,7 @@ func playerLeft(gameID string, r *room, leaverID string) {
 	}
 	r.done = true
 
-	var winner game.Owner
+	var winner string
 	for userID, symbol := range r.players {
 		if userID != leaverID {
 			winner = symbol

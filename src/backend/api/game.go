@@ -4,36 +4,52 @@ import (
 	"log"
 	"net/http"
 
+	"tac-backend/internal/ai"
 	"tac-backend/internal/game"
 
 	"github.com/gin-gonic/gin"
 )
 
-func sendMove(r *room, player game.Owner, field, cell int) (over bool, winner game.Owner) {
+func sendMove(r *room, player string, field, cell int) (over bool, winner string) {
 	for _, conn := range r.conns {
 		conn.WriteJSON(gin.H{"type": "move", "player": player, "field": field, "cell": cell})
 	}
-	over, winner = r.g.Result()
-	if over {
-		r.done = true
-		for _, conn := range r.conns {
-			conn.WriteJSON(gin.H{"type": "game_over", "winner": winner})
-			conn.Close()
-		}
+
+	switch r.g.Winner() {
+	case 0: //still playing
+		return false, ""
+	case game.Cross:
+		winner = "X"
+	case game.Circle:
+		winner = "O"
+	} //anything else is a draw, winner stays ""
+
+	r.done = true
+	for _, conn := range r.conns {
+		conn.WriteJSON(gin.H{"type": "game_over", "winner": jsonWinner(winner)})
+		conn.Close()
 	}
-	return over, winner
+	return true, winner
 }
 
-func botTurn(r *room) (over bool, winner game.Owner) {
-	if r.bot == game.Ownerless || r.g.CurrentPlayer() != r.bot {
-		return false, game.Ownerless
+func jsonWinner(winner string) any {
+	if winner == "" {
+		return nil
 	}
-	field, cell := r.g.AIGetMove()
-	if err := r.g.MakeMove(r.bot, field, cell); err != nil {
-		log.Println("bot made an illegal move:", err)
-		return false, game.Ownerless
+	return winner
+}
+
+func botTurn(r *room) (over bool, winner string) {
+	if r.bot == "" || r.g.CurrentPlayer() != r.bot {
+		return false, ""
 	}
-	return sendMove(r, r.bot, field, cell)
+
+	move := ai.GetMove(r.g, 1000)
+	if err := r.g.MakeMove(move); err != nil {
+		log.Println("ai gave an illegal move:", err)
+		return false, ""
+	}
+	return sendMove(r, r.bot, int(move.Field), int(move.Cell))
 }
 
 type moveMsg struct {
@@ -92,12 +108,17 @@ func GameSocketHandler(c *gin.Context) {
 		}
 
 		r.mu.Lock()
-		if err := r.g.MakeMove(symbol, msg.Field, msg.Cell); err != nil {
+		if msg.Field < 0 || msg.Field > 8 || msg.Cell < 0 || msg.Cell > 8 {
+			con.WriteJSON(gin.H{"type": "error", "error": game.ErrOutOfRange.Error()})
+			r.mu.Unlock()
+			continue
+		}
+		move := game.Move{Player: symbol, Field: uint8(msg.Field), Cell: uint8(msg.Cell)}
+		if err := r.g.MakeMove(move); err != nil {
 			con.WriteJSON(gin.H{"type": "error", "error": err.Error()})
 			r.mu.Unlock()
 			continue
 		}
-
 		over, winner := sendMove(r, symbol, msg.Field, msg.Cell)
 		if !over {
 			over, winner = botTurn(r)
