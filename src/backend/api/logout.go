@@ -14,7 +14,7 @@ func LogoutHandler(c *gin.Context) {
 		respondError(c, http.StatusInternalServerError, "server_error", err)
 		return
 	}
-	c.SetCookie("session", "", -1, "/", "", false, true)
+	c.SetCookie("session", "", -1, "/", "", true, true)
 	respondOK(c, http.StatusOK, gin.H{"message": "logged_out"})
 
 }

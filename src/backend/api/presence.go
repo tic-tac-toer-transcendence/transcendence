@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+
+	"tac-backend/database"
 )
 
 var upgradeWebsocket = websocket.Upgrader{
@@ -41,6 +43,8 @@ func PresenceHandlerWS(c *gin.Context) {
 		presence.mu.Lock()
 		delete(presence.users, userID)
 		presence.mu.Unlock()
+
+		cancelInvite(userID)
 	}() //() because fefer and multiple lines dont like each other
 
 	for { //no condition for loop is infinite
@@ -57,7 +61,18 @@ func OnlineUsersHandler(c *gin.Context) {
 		userIDs = append(userIDs, id)
 	}
 	presence.mu.Unlock()
-	respondOK(c, http.StatusOK, gin.H{"online": userIDs})
+
+	var users []database.User
+	if err := database.DB.Where("id IN ?", userIDs).Find(&users).Error; err != nil {
+		respondError(c, http.StatusInternalServerError, "server_error", err)
+		return
+	}
+
+	online := make([]gin.H, 0, len(users))
+	for _, u := range users {
+		online = append(online, gin.H{"id": u.ID, "username": u.Username, "symbol": u.UserSymbol})
+	}
+	respondOK(c, http.StatusOK, gin.H{"online": online})
 }
 
 func IsOnline(userID string) bool {
