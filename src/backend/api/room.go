@@ -9,6 +9,7 @@ import (
 	"tac-backend/internal/game"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -30,6 +31,35 @@ var rooms = &roomHub{ //we need to create empty list of rooms (roomHub) at start
 	byID: map[string]*room{},
 }
 
+func createBotRoom(userID string) (string, error) {
+	var user database.User
+	if err := database.DB.First(&user, "id = ?", userID).Error; err != nil {
+		return "", err
+	}
+
+	human, bot := game.Cross, game.Circle
+	if user.UserSymbol == database.SymbolO {
+		human, bot = game.Circle, game.Cross
+	}
+	g, err := game.NewGame(human) //we will have human move first
+	if err != nil {
+		return "", err
+	}
+
+	gameID := uuid.NewString() //becaus bot games arent in DB so we cannot have use of id creation from DB duhh
+
+	rooms.mu.Lock()
+	rooms.byID[gameID] = &room{
+		g:       g,
+		players: map[string]game.Owner{userID: human},
+		conns:   map[string]*websocket.Conn{},
+		bot:     bot,
+	}
+	rooms.mu.Unlock()
+
+	return gameID, nil
+}
+
 func endGame(gameID string, r *room, winner game.Owner) {
 	var winnerID *string
 	for userID, symbol := range r.players {
@@ -38,8 +68,10 @@ func endGame(gameID string, r *room, winner game.Owner) {
 		}
 	}
 
-	if err := database.FinishGame(gameID, winnerID); err != nil {
-		log.Println("could not save game result:", err)
+	if r.bot == game.Ownerless { // also we dont save bot games in db (possibly none games at all)
+		if err := database.FinishGame(gameID, winnerID); err != nil {
+			log.Println("could not save game result:", err)
+		}
 	}
 
 	rooms.mu.Lock()

@@ -1,10 +1,40 @@
 package api
 
 import (
+	"log"
 	"net/http"
+
+	"tac-backend/internal/game"
 
 	"github.com/gin-gonic/gin"
 )
+
+func sendMove(r *room, player game.Owner, field, cell int) (over bool, winner game.Owner) {
+	for _, conn := range r.conns {
+		conn.WriteJSON(gin.H{"type": "move", "player": player, "field": field, "cell": cell})
+	}
+	over, winner = r.g.Result()
+	if over {
+		r.done = true
+		for _, conn := range r.conns {
+			conn.WriteJSON(gin.H{"type": "game_over", "winner": winner})
+			conn.Close()
+		}
+	}
+	return over, winner
+}
+
+func botTurn(r *room) (over bool, winner game.Owner) {
+	if r.bot == game.Ownerless || r.g.CurrentPlayer() != r.bot {
+		return false, game.Ownerless
+	}
+	field, cell := r.g.AIGetMove()
+	if err := r.g.MakeMove(r.bot, field, cell); err != nil {
+		log.Println("bot made an illegal move:", err)
+		return false, game.Ownerless
+	}
+	return sendMove(r, r.bot, field, cell)
+}
 
 type moveMsg struct {
 	Type  string `json:"type"`
@@ -67,21 +97,17 @@ func GameSocketHandler(c *gin.Context) {
 			r.mu.Unlock()
 			continue
 		}
-		for _, conn := range r.conns {
-			conn.WriteJSON(gin.H{"type": "move", "player": symbol, "field": msg.Field, "cell": msg.Cell})
+
+		over, winner := sendMove(r, symbol, msg.Field, msg.Cell)
+		if !over {
+			over, winner = botTurn(r)
 		}
-		over, winner := r.g.Result()
+		r.mu.Unlock()
+
 		if over {
-			r.done = true
-			for _, conn := range r.conns {
-				conn.WriteJSON(gin.H{"type": "game_over", "winner": winner})
-				conn.Close()
-			}
-			r.mu.Unlock()
 			endGame(gameID, r, winner)
 			return
 		}
-		r.mu.Unlock()
 	}
 
 }
