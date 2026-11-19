@@ -15,10 +15,14 @@ func RegisterRoutes(r *gin.Engine) {
 		auth.GET("/users", GetUsersHandler)
 		auth.GET("/users/count", GetUserCountHandler)
 		auth.DELETE("/users/:id", DeleteUserHandler)
-		//auth.GET("/ws/game/:id", GameSocketHandler)
+		auth.GET("/ws/game/:id", GameSocketHandler)
+		auth.POST("/games/bot", BotGameHandler)
 		auth.POST("/logout", LogoutHandler)
 		auth.GET("/ws/presence", PresenceHandlerWS)
 		auth.GET("/users/online", OnlineUsersHandler)
+		auth.POST("/invites", CreateInviteHandler)
+		auth.POST("/invites/accept", AcceptInviteHandler)
+		auth.POST("/invites/decline", DeclineInviteHandler)
 	}
 
 }

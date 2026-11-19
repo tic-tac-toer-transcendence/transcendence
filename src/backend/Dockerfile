@@ -4,7 +4,7 @@ FROM golang:1.26.0 AS builder
 WORKDIR /app
 
 COPY go.mod go.sum ./
-RUN go mod download && go get -u github.com/gin-gonic/gin@v1.12.0
+RUN go mod download
 
 COPY . .
 

@@ -34,7 +34,10 @@ func GetUserCountHandler(c *gin.Context) {
 func DeleteUserHandler(c *gin.Context) {
 
 	id := c.Param("id")
-
+	if id != c.MustGet("userID").(string) {
+		respondError(c, http.StatusForbidden, "forbidden", nil)
+		return
+	}
 	result := database.DB.Delete(&database.User{}, "id = ?", id)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
