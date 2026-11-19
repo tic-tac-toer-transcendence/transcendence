@@ -6,7 +6,6 @@ import (
 
 	"tac-backend/api"
 	"tac-backend/database"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,17 +23,72 @@ func main() {
 	}
 }
 
-/* Game
+// ================================================================================================
+// The part below is to experiment with functions without needing the database
+// to be initialized
+// ================================================================================================
+
+/*
+import (
+	"log"
+	"fmt"
+	"time"
+	"math/rand"
+
+	"tac-backend/internal/game"
+	"tac-backend/internal/ai"
+)
+
+
 func main() {
-	var test = new(game.Session)
-	test.Selected = game.Unpositioned
-	test.Display()
-	fmt.Println()
 
-	fmt.Println("---\nWe are now selecting the MidMid field\n---")
-	test.SelectBoard(game.MidMid)
+	rand.Seed(time.Now().UnixNano())
 
-	test.Display()
+	fmt.Println("Lets start again")
+
+	instErr, g := game.NewInstance("x")
+	if instErr != nil {
+		log.Printf("Could not create a new game instance: %s\n", instErr)
+	}
+
+	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
 	fmt.Println()
+	g.Display()
+
+	if err := g.MakeMove(game.Move{Player: "x", Field: 1, Cell: 3}); err != nil {
+		log.Printf("Failed to make a move: %s\n", err)
+	}
+
+	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
+	g.Display()
+	
+	if err := g.MakeMove(game.Move{Player: "o", Field: 3, Cell: 0}); err != nil {
+		log.Printf("Failed to make a move: %s\n", err)
+	}
+
+	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
+	g.Display()
+
+	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
+		log.Printf("Failed to make a move: %s\n", err)
+	}
+
+	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
+	g.Display()
+
+	ai.SimulateGame(g)
+
+	fmt.Printf("Round: %d\n", g.Round())
+	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
+	fmt.Println()
+	g.Display()
+	fmt.Printf("The winner is: %d\n", g.Winner())
 }
 */
