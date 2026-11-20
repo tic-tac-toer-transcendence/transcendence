@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import Form from "next/form"
-import handleLoginForm from "@/app/login/actions"
+import loginAction from "@/actions/login"
 import PasswordToggleIcon from "@/components/icons/passwordToggleIcon"
 import { useActionState, useState } from "react";
 
@@ -21,7 +21,7 @@ const initialState = {
 
 export default function LoginForm() {
   const [type, setType] = useState("password");
-  const [state, formAction, pending] = useActionState(handleLoginForm, initialState)
+  const [state, formAction, pending] = useActionState(loginAction, initialState)
 
   function toggleVisibility() {
     if (type === "password")

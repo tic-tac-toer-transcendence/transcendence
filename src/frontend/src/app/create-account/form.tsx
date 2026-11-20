@@ -1,10 +1,10 @@
 "use client"
 import Form from "next/form"
 import PasswordToggleIcon from "@/components/icons/passwordToggleIcon"
-import createUserAction from "./actions";
-import { useState, useActionState } from "react";
 import XIcon from "@/components/icons/xIcon";
 import OIcon from "@/components/icons/oIcon";
+import createAccountAction from "@/actions/createAccount";
+import { useState, useActionState } from "react";
 
 export interface CreateUserState {
   email: string,
@@ -30,7 +30,7 @@ const initialState: CreateUserState = {
 
 export default function CreateUserForm() {
   const [type, setType] = useState("password");
-  const [state, formAction, pending] = useActionState(createUserAction, initialState);
+  const [state, formAction, pending] = useActionState(createAccountAction, initialState);
 
   function toggleVisibility() {
     if (type === "password")
