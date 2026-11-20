@@ -1,0 +1,37 @@
+import Board from "@/components/board/board";
+
+export default function Game() {
+  return (
+    <main className="basis-full p-24 flex flex-col max-h-screen gap-12">
+      <section className="p-6 bg-section-bg border-2 border-section-border rounded-2xl flex justify-between items-center">
+        <h2 className="font-semibold text-sm uppercase">
+          Playing against: 
+          <span className="font-bold text-x-green ml-5 normal-case">
+            Gridis
+          </span>
+        </h2>
+        <div className="flex gap-3">
+          <button className="px-5 py-2 bg-button-bg border border-button-border rounded-lg font-bold text-sm">
+            Offer Draw
+          </button>
+          <button className="px-5 py-2 bg-button-bg border border-button-border rounded-lg font-bold text-sm">
+            Resign
+          </button>
+        </div>
+      </section>
+      <section className="flex gap-16 justify-between">
+        <div className="p-8 bg-section-bg border-2 border-section-border rounded-3xl max-w-fit w-full grow">
+          <Board />
+        </div>
+        <div>
+          <div>
+            Your turn
+          </div>
+          <div>
+            Match stats
+          </div>
+        </div>
+      </section>
+    </main>
+  )
+}
