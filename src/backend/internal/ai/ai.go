@@ -39,19 +39,9 @@ func GetMove(g *game.Instance, iterations int) game.Move {
 }
 
 func randomMove(g *game.Instance) game.Move {
-
-	// Chose a random field if possible or the one you have to use
-	fields := g.FreeFields()
-	idx    := rand.Intn(len(fields))
-    field  := fields[idx]
-
-	// Chose a completely random cell
-	cells  := g.FreeCells(field)
-	idx     = rand.Intn(len(cells))
-	cell   := cells[idx]
-
-	// Chose a random free cell in that field
-	return game.Move{Player: g.CurrentPlayer(), Field: field, Cell: cell}
+	moves := g.PossibleMoves()
+	idx   := rand.Intn(len(moves))
+	return moves[idx]
 }
 
 // Game is copied instead of referenced to not change the actual game state
