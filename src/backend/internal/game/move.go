@@ -103,3 +103,16 @@ func (inst *Instance) FreeCells(field uint8) []uint8 {
 	}
 	return vec
 }
+
+// Returns all indexes in which the current player can leave a mark on the board
+func (inst *Instance) FreeIdx() []uint8 {
+	res := []uint8{}
+	fields := inst.FreeFields()
+	for _, field := range fields {
+		cells := inst.FreeCells(field)
+		for _, cell := range cells {
+			res = append(res, cell+field*9)
+		}
+	}
+	return res
+}

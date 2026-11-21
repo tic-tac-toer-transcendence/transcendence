@@ -16,6 +16,12 @@ import (
 
 func GetMove(g *game.Instance, iterations int) game.Move {
 
+	// === TEMPORARY ===
+	// Just return a random *valid* move as AI draft 01
+	// This allows to play against the bot before the AI is intelligent
+	return randomMove(g)
+
+	/*
 	// Ai always plays the players whos turn it is at the moment
 	player := g.CurrentPlayer()
 
@@ -29,12 +35,10 @@ func GetMove(g *game.Instance, iterations int) game.Move {
 	var cell uint8 = 0
 
 	return game.Move{Player: player, Field: field, Cell: cell}
+	*/
 }
 
-// Don't use on the actual game instance since this one changes it
-// Function below makes a copy first
-// Takes a game instance and makes a random valid move
-func randomMove(g *game.Instance) {
+func randomMove(g *game.Instance) game.Move {
 
 	// Chose a random field if possible or the one you have to use
 	fields := g.FreeFields()
@@ -47,13 +51,14 @@ func randomMove(g *game.Instance) {
 	cell   := cells[idx]
 
 	// Chose a random free cell in that field
-	var move = game.Move{Player: g.CurrentPlayer(), Field: field, Cell: cell}
-	g.MakeMove(move)
+	return game.Move{Player: g.CurrentPlayer(), Field: field, Cell: cell}
 }
 
-func SimulateGame(g *game.Instance) uint8 {//TODO: make private and reference by COPY
+// Game is copied instead of referenced to not change the actual game state
+func SimulateGame(g game.Instance) uint8 {
 	for true {
-		randomMove(g)
+		randMove := randomMove(&g)
+		g.MakeMove(randMove)
 		if res := g.Winner(); res != 0 {
 			return res
 		}

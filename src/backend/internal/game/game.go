@@ -2,7 +2,7 @@ package game
 
 import (
 	"fmt"
-	"log"
+	// "log"
 	"strings"
 )
 
@@ -53,10 +53,10 @@ func NewInstance(first string) (err error, inst *Instance){
 	// Validate first player
 	if strings.ToUpper(first) == "X" {
 		g.crossTurn = true
-		log.Println("Cross begins")
+		// log.Println("Cross begins")
 	} else if strings.ToUpper(first) == "O" {
 		g.crossTurn = false
-		log.Println("Circle begins")
+		// log.Println("Circle begins")
 	} else {
 		fmt.Printf("Not a valid identifier: %s\n", first)
 		return ErrBadPlayer, nil

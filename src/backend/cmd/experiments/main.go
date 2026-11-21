@@ -2,54 +2,32 @@ package main
 
 import (
 	"log"
-	"time"
-
-	"tac-backend/api"
-	"tac-backend/database"
-	"github.com/gin-gonic/gin"
-)
-
-func main() {
-
-	time.Sleep(5 * time.Second) //! TEMP Fix: later add health check for database
-	database.InitDB()           // init database, will exit on its own if it fails
-
-	r := gin.Default() // creates Gin router with logger and recovery (default middleware)
-
-	api.RegisterRoutes(r) // registers all routes to Gins Engine table
-
-	if err := r.Run(); err != nil { // listen on socket
-		log.Fatal("Failed to start server: ", err) //eg. Port already in use
-	}
-}
-
-// ================================================================================================
-// The part below is to experiment with functions without needing the database
-// to be initialized
-// ================================================================================================
-
-/*
-import (
-	"log"
 	"fmt"
 	"time"
 	"math/rand"
 
 	"tac-backend/internal/game"
 	"tac-backend/internal/ai"
-)
 
+	"os"
+)
 
 func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	fmt.Println("Lets start again")
 
 	instErr, g := game.NewInstance("x")
 	if instErr != nil {
 		log.Printf("Could not create a new game instance: %s\n", instErr)
 	}
+
+	/*
+	start := time.Now()
+	t := time.Now()
+	elapsed := t.Sub(start)
+	fmt.Println(elapsed)
+	*/
 
 	fmt.Printf("Round: %d\n", g.Round())
 	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
@@ -83,12 +61,13 @@ func main() {
 	fmt.Println()
 	g.Display()
 
-	ai.SimulateGame(g)
+	ai.SimulateGame(*g)
 
 	fmt.Printf("Round: %d\n", g.Round())
 	for _, v := range g.FreeFields() { fmt.Printf("%d ", v) }
 	fmt.Println()
 	g.Display()
 	fmt.Printf("The winner is: %d\n", g.Winner())
+
+	os.Exit(0)
 }
-*/
