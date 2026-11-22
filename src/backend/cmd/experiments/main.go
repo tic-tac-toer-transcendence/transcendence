@@ -24,33 +24,33 @@ func main() {
 
 	// fmt.Println(g.PossibleMoves())
 
+	// ==================================================================
 	fmt.Printf("Round: %d\n", g.Round())
 	g.Display()
-	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
+	move, errMove := ai.GetMove(g, ai.LvlNoob)
+	if errMove != nil {
+		log.Printf("Failed to make a move: %s\n", errMove)
+	} else if err := g.MakeMove(move); err != nil {
 		log.Printf("Failed to make a move: %s\n", err)
 	}
 
+	// ==================================================================
 	fmt.Printf("Round: %d\n", g.Round())
 	g.Display()
-	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
+	move, errMove = ai.GetMove(g, ai.LvlBeginner)
+	if errMove != nil {
+		log.Printf("Failed to make a move: %s\n", errMove)
+	} else if err := g.MakeMove(move); err != nil {
 		log.Printf("Failed to make a move: %s\n", err)
 	}
 
+	// ==================================================================
 	fmt.Printf("Round: %d\n", g.Round())
 	g.Display()
-	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
-		log.Printf("Failed to make a move: %s\n", err)
-	}
-
-	fmt.Printf("Round: %d\n", g.Round())
-	g.Display()
-	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
-		log.Printf("Failed to make a move: %s\n", err)
-	}
-
-	fmt.Printf("Round: %d\n", g.Round())
-	g.Display()
-	if err := g.MakeMove(ai.GetMove(g, 1000)); err != nil {
+	move, errMove = ai.GetMove(g, ai.LvlPro)
+	if errMove != nil {
+		log.Printf("Failed to make a move: %s\n", errMove)
+	} else if err := g.MakeMove(move); err != nil {
 		log.Printf("Failed to make a move: %s\n", err)
 	}
 	
