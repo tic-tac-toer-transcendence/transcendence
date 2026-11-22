@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"time"
+	"math/rand"
 
 	"tac-backend/api"
 	"tac-backend/database"
@@ -11,6 +12,7 @@ import (
 
 func main() {
 
+	rand.Seed(time.Now().UnixNano())
 	time.Sleep(5 * time.Second) //! TEMP Fix: later add health check for database
 	database.InitDB()           // init database, will exit on its own if it fails
 
