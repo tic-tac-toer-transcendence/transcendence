@@ -1,18 +1,12 @@
 import XIcon from "@/components/icons/xIcon"
 import OIcon from "@/components/icons/oIcon"
-import { BoardAction } from "./board"
-import { ActionDispatch } from "react"
+import { CellState } from "@/types/cell"
 
-export interface CellState {
-  cellKey: number,
-  fieldKey: number,
-  claimed: "X" | "O" | null
-}
+export default function Cell({ state, handleCellClick }: { state: CellState, handleCellClick(cell: CellState): void }) {
 
-export default function Cell({ state, dispatch }: { state: CellState, dispatch: ActionDispatch<[action: BoardAction]> }) {
   function handleClick() {
-    console.log("hehe")
-    dispatch({ type: "claimCell", value: { fieldID: state.fieldKey, cellID: state.cellKey, gender: "X" }})
+    console.log("hihi");
+    handleCellClick(state);
   }
 
   return (

@@ -1,18 +1,12 @@
-import Cell, { CellState } from "@/components/board/cell"
-import { ActionDispatch } from "react";
-import { BoardAction } from "@/components/board/board";
+import Cell from "@/components/board/cell"
+import { FieldState } from "@/types/field";
+import { CellState } from "@/types/cell";
 
-export interface FieldState {
-  active: boolean;
-  claimed: "X" | "O" | null;
-  cells: CellState[]
-}
-
-export default function Field({ state, dispatch }: { state: FieldState, dispatch: ActionDispatch<[action: BoardAction]> }) {
+export default function Field({ state, handleCellClick }: { state: FieldState, handleCellClick(cell: CellState): void }) {
   return (
     <ul className="max-w-md bg-button-bg border-2 rounded-xl border-button-border p-2 grid grid-rows-3 grid-cols-3 gap-1 w-full">
       {state.cells.map((state, i) => {
-        return <Cell key={i} state={state} dispatch={dispatch} />
+        return <Cell key={i} state={state} handleCellClick={handleCellClick} />
       })}
     </ul>
   )

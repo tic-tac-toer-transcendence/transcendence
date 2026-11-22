@@ -13,10 +13,11 @@ export default async function botGameAction() {
 
   })
 
-  console.log(res.status);
-
   if (res.ok) {
-    redirect("/game");
+    const data = await res.json();
+
+    console.log(data);
+    redirect(`/game?gameId=${data.gameId}&opponent=bot`);
   }
 
 }
