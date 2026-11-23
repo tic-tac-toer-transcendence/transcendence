@@ -2,7 +2,7 @@ package game
 
 import (
 	"fmt"
-	"log"
+	// "log"
 	"strings"
 )
 
@@ -21,21 +21,21 @@ type Instance struct {
 	gameOver       bool    // does the whole game already have an outcome
 	winner         uint8   // who won: none(0), cross(1), cirle(2), tie(3)
 	round          int     // how many rounds have been played
-	/*
-	* For fun we are doing bit stuff here:
-	* - 0000 -> (0) - nobody won
-	* - 0001 -> (1) - cross won
-	* - 0010 -> (2) - circle won
-	* - 0100 -> (4) - tie and full
-	* - 0101 -> (5) - cross won and full
-	* - 0110 -> (6) - circle won and full
-	* => Check is full can be done with a check of 4th bit
-	*/
-	fieldWinner [9]uint8
+	fieldWinner [9]uint8   // acts as a cache for the results of the inner boards
 	nextField      uint8   // which field the next move must land; 9 -> free choice
 	lastMove       Move    // last move, initialized with bullshit, to send to opponent session
 }
 
+/*
+* For fun we are doing bit stuff here:
+* - 0000 -> (0) - nobody won
+* - 0001 -> (1) - cross won
+* - 0010 -> (2) - circle won
+* - 0100 -> (4) - tie and full
+* - 0101 -> (5) - cross won and full
+* - 0110 -> (6) - circle won and full
+* => Check is full can be done with a check of 4th bit
+*/
 const (
 	Cross      uint8 = 1      // 0b0001
 	Circle     uint8 = 2      // 0b0010
@@ -53,10 +53,10 @@ func NewInstance(first string) (err error, inst *Instance){
 	// Validate first player
 	if strings.ToUpper(first) == "X" {
 		g.crossTurn = true
-		log.Println("Cross begins")
+		// log.Println("Cross begins")
 	} else if strings.ToUpper(first) == "O" {
 		g.crossTurn = false
-		log.Println("Circle begins")
+		// log.Println("Circle begins")
 	} else {
 		fmt.Printf("Not a valid identifier: %s\n", first)
 		return ErrBadPlayer, nil

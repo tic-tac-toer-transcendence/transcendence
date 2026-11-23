@@ -9,7 +9,7 @@ RUN go mod download
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH \
-    go build -o /server .
+    go build -o /server ./cmd/server
 
 # Running the backend server
 FROM gcr.io/distroless/static-debian12:nonroot
