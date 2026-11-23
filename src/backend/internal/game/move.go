@@ -103,3 +103,17 @@ func (inst *Instance) FreeCells(field uint8) []uint8 {
 	}
 	return vec
 }
+
+func (inst *Instance) PossibleMoves() []Move {
+	moves  := []Move{}
+	player := inst.CurrentPlayer()
+	fields := inst.FreeFields()
+
+	for _, field := range fields {
+		cells := inst.FreeCells(field)
+		for _, cell := range cells {
+			moves = append(moves, Move{Player: player, Field: field, Cell: cell})
+		}
+	}
+	return moves
+}

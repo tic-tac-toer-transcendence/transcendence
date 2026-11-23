@@ -43,9 +43,11 @@ func botTurn(r *room) (over bool, winner string) {
 	if r.bot == "" || r.g.CurrentPlayer() != r.bot {
 		return false, ""
 	}
-
-	move := ai.GetMove(r.g, 1000)
-	if err := r.g.MakeMove(move); err != nil {
+	move, errMove := ai.GetMove(r.g, ai.LvlNoob) // TODO: Make the AI level part of the room struct
+	if errMove != nil {
+		log.Println("ai move impossible: ", errMove)
+		return false, ""
+	} else if err := r.g.MakeMove(move); err != nil {
 		log.Println("ai gave an illegal move:", err)
 		return false, ""
 	}
