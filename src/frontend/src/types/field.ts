@@ -2,7 +2,7 @@ import { Gender } from "./gender"
 import { CellState } from "./cell"
 
 export type FieldState = {
-  active: boolean,
+  active: Gender | null,
   claimed: Gender | null,
   cells: CellState[]
 }

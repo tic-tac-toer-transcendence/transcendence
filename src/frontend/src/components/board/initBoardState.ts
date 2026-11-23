@@ -7,7 +7,7 @@ export function initBoardState(): BoardState {
     status: "waiting",
     board: [
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 0, id: 0 }, { claimed: null, fieldId: 0, id: 1 }, { claimed: null, fieldId: 0, id: 2 },
@@ -16,7 +16,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 1, id: 0 }, { claimed: null, fieldId: 1, id: 1 }, { claimed: null, fieldId: 1, id: 2 },
@@ -25,7 +25,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 2, id: 0 }, { claimed: null, fieldId: 2, id: 1 }, { claimed: null, fieldId: 2, id: 2 },
@@ -34,7 +34,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 3, id: 0 }, { claimed: null, fieldId: 3, id: 1 }, { claimed: null, fieldId: 3, id: 2 },
@@ -43,7 +43,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 4, id: 0 }, { claimed: null, fieldId: 4, id: 1 }, { claimed: null, fieldId: 4, id: 2 },
@@ -52,7 +52,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 5, id: 0 }, { claimed: null, fieldId: 5, id: 1 }, { claimed: null, fieldId: 5, id: 2 },
@@ -61,7 +61,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 6, id: 0 }, { claimed: null, fieldId: 6, id: 1 }, { claimed: null, fieldId: 6, id: 2 },
@@ -70,7 +70,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 7, id: 0 }, { claimed: null, fieldId: 7, id: 1 }, { claimed: null, fieldId: 7, id: 2 },
@@ -79,7 +79,7 @@ export function initBoardState(): BoardState {
         ]
       },
       {
-        active: false,
+        active: null,
         claimed: null,
         cells: [
           { claimed: null, fieldId: 8, id: 0 }, { claimed: null, fieldId: 8, id: 1 }, { claimed: null, fieldId: 8, id: 2 },

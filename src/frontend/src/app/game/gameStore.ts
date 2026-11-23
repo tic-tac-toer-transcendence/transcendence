@@ -2,6 +2,7 @@ import { initBoardState } from "@/components/board/initBoardState";
 import { BoardState } from "@/types/board"
 import { CellState } from "@/types/cell";
 import { GameServerMessage, GameClientMessage } from "@/types/gameMessages"
+import { moveStateUpdate } from "./gameLogic";
 
 const initialState: BoardState = initBoardState();
 
@@ -25,27 +26,18 @@ function handleMessage(message: GameServerMessage) {
       updateState({...state,
         player: message.you,
         turn: message.turn,
-        status: "playing"
+        status: "playing",
+        board: state.board.map((field) => {
+          const active = message.you === message.turn ? message.you : null;
+          return {...field,
+            active: active,
+          }
+        })
       });
       break ;
     }
     case("move"): {
-      updateState({...state,
-        turn: message.player === "X" ? "O" : "X",
-        board: state.board.map((field, fieldId) => {
-          if (fieldId === message.field)
-            return ({...field,
-              cells: field.cells.map((cell, cellid) => {
-                if (cellid === message.cell)
-                  return ({...cell,
-                    claimed: message.player,
-                  })
-                return cell
-              })
-            })
-          return field;
-        })
-      })
+      updateState(moveStateUpdate(state, message));
       break ;
     }
   }
