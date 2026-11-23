@@ -2,11 +2,16 @@ import XIcon from "@/components/icons/xIcon"
 import OIcon from "@/components/icons/oIcon"
 import { CellState } from "@/types/cell"
 
-export default function Cell({ state, handleCellClick }: { state: CellState, handleCellClick(cell: CellState): void }) {
+interface CellProps {
+  state: CellState,
+  handleCellClick?(cell: CellState): void
+}
+
+export default function Cell({ state, handleCellClick }: CellProps) {
 
   function handleClick() {
-    console.log("hihi");
-    handleCellClick(state);
+    if (handleCellClick)
+      handleCellClick(state);
   }
 
   return (

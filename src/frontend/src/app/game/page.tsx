@@ -7,6 +7,7 @@ import GameSocketProvider from "./wsProvider";
 export default function Game() {
   const queryParams = useSearchParams();
   const gameId = queryParams.get("gameId");
+  const opponent = queryParams.get("opponent");
 
   return (
     <main className="basis-full p-24 flex flex-col max-h-screen gap-12">
@@ -15,7 +16,7 @@ export default function Game() {
           <h2 className="font-semibold text-sm uppercase">
             Playing against: 
             <span className="font-bold text-x-green ml-5 normal-case">
-              Gridis
+              {opponent}
             </span>
           </h2>
           <div className="flex gap-3">

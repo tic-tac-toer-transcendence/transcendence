@@ -16,8 +16,7 @@ export default async function botGameAction() {
   if (res.ok) {
     const data = await res.json();
 
-    console.log(data);
-    redirect(`/game?gameId=${data.gameId}&opponent=bot`);
+    redirect(`/game?gameId=${data.gameId}&opponent=AI`);
   }
 
 }

@@ -1,4 +1,5 @@
-import Board from "@/components/board/board";
+import DisplayBoard from "@/components/board/displayBoard";
+import { initBoardState } from "@/components/board/initBoardState";
 import Rules from "@/components/rules"
 import Link from "next/link";
 
@@ -18,7 +19,7 @@ export default function Home() {
           </div>
         </div>
         <div className="bg-section-bg border-2 rounded-3xl border-section-border p-8 max-w-lg w-full h-fit">
-          <Board />
+          <DisplayBoard state={initBoardState()} />
         </div>
       </section>
       <Rules />

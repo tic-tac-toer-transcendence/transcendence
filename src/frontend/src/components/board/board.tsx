@@ -1,4 +1,5 @@
 "use client"
+
 import Field from "@/components/board/field";
 import { useGameState, useSendMove } from "@/app/game/hooks";
 import { CellState } from "@/types/cell";
@@ -13,10 +14,8 @@ export default function Board() {
     if (
       boardState.status !== "playing"
       || !isMyTurn
-      || boardState.board[cell.fieldId].cells[cell.id].claimed
-    )
+      || boardState.board[cell.fieldId].cells[cell.id].claimed)
       return ;
-    console.log("haha");
 
     sendMove(cell);
   }
@@ -24,6 +23,7 @@ export default function Board() {
   if (boardState.status === "waiting") {
     return (<div>Waiting...</div>);
   }
+
   return (
     <div className="bg-background rounded-2xl p-3 grid grid-rows-3 grid-cols-3 gap-3 w-full max-w-md">
       {boardState.board.map((state, i) => {

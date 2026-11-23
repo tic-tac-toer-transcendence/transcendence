@@ -1,7 +1,8 @@
 "use client"
-import Board from "@/components/board/board" 
 import { useState } from "react";
 import { ArrowLeft, ArrowRight } from "./icons/arrows";
+import DisplayBoard from "./board/displayBoard";
+import { initBoardState } from "./board/initBoardState";
 
 export default function Rules() {
   const [step, setStep] = useState(1);
@@ -32,7 +33,7 @@ export default function Rules() {
               {`Each of the 9 squares on the big board contains a small 3x3 Tic Tac Toe board. The big board is the game's overall map, while each sub-board is a local battleground.`}
             </p>
           </div>
-          <Board />
+          <DisplayBoard state={initBoardState()} />
         </div>
         <div className={`p-6 bg-button-bg border-2 border-button-border rounded-2xl flex justify-between items-center ${step !== 2 ? "hidden" : ""}`} >
           <div className="flex flex-col gap-6 max-w-md">
@@ -46,7 +47,7 @@ export default function Rules() {
               {`Your opponent's previous move determines which sub-board you are allowed to play in next. If your opponent places an X in the top-left square of middle-left board, you must place your O in any empty square of top-left board.`}
             </p>
           </div>
-          <Board />
+          <DisplayBoard state={initBoardState()} />
         </div>
         <div className={`p-6 bg-button-bg border-2 border-button-border rounded-2xl flex justify-between items-center ${step !== 3 ? "hidden" : ""}`} >
           <div className="flex flex-col gap-6 max-w-md">
@@ -60,7 +61,7 @@ export default function Rules() {
               {`Win three small squares in a row to claim that entire sub-board for your symbol (X or O). When a sub-board is won, the corresponding square on the big board is marked as claimed.`}
             </p>
           </div>
-          <Board />
+          <DisplayBoard state={initBoardState()} />
         </div>
         <div className={`p-6 bg-button-bg border-2 border-button-border rounded-2xl flex justify-between items-center ${step !== 4 ? "hidden" : ""}`} >
           <div className="flex flex-col gap-6 max-w-md">
@@ -74,7 +75,7 @@ export default function Rules() {
               {`If your opponent’s move placed you into a claimed or filled sub-board, you are allowed to play in any free space instead.`}
             </p>
           </div>
-          <Board />
+          <DisplayBoard state={initBoardState()} />
         </div>
         <div className={`p-6 bg-button-bg border-2 border-button-border rounded-2xl flex justify-between items-center ${step !== 5 ? "hidden" : ""}`} >
           <div className="flex flex-col gap-6 max-w-md">
@@ -88,7 +89,7 @@ export default function Rules() {
               {`Claim three sub-boards in a row on the big board to win the entire game. This can happen horizontally, vertically, or diagonally across the big board.`}
             </p>
           </div>
-          <Board />
+          <DisplayBoard state={initBoardState()} />
         </div>
       </div>
       <div className="flex gap-4">

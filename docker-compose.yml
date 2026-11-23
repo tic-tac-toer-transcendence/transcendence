@@ -17,11 +17,11 @@ services:
     container_name: frontend
     build:
       context: ./src/frontend
-      dockerfile: dockerfile
-    volumes:
-      - ./src/frontend:/app
-      - /app/node_modules
-      - /app/.next
+      dockerfile: dockerfile.prod
+    # volumes:
+    #   - ./src/frontend:/app
+    #   - /app/node_modules
+    #   - /app/.next
     networks:
         - transcendence
     expose: 
