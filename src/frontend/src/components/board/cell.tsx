@@ -1,23 +1,22 @@
 import XIcon from "@/components/icons/xIcon"
 import OIcon from "@/components/icons/oIcon"
-import { BoardAction } from "./board"
-import { ActionDispatch } from "react"
+import { CellState } from "@/types/cell"
 
-export interface CellState {
-  cellKey: number,
-  fieldKey: number,
-  claimed: "X" | "O" | null
+interface CellProps {
+  state: CellState,
+  handleCellClick?(cell: CellState): void
 }
 
-export default function Cell({ state, dispatch }: { state: CellState, dispatch: ActionDispatch<[action: BoardAction]> }) {
+export default function Cell({ state, handleCellClick }: CellProps) {
+
   function handleClick() {
-    console.log("hehe")
-    dispatch({ type: "claimCell", value: { fieldID: state.fieldKey, cellID: state.cellKey, gender: "X" }})
+    if (handleCellClick)
+      handleCellClick(state);
   }
 
   return (
-    <li className="bg-section-bg border border-button-border w-full h-0 pb-[calc(100%-2px)] relative">
-      <button className={`absolute p-2 ${state.claimed === "X" ? "fill-x-green": state.claimed === "O" ? "fill-o-purple" : ""}`} onClick={() => {handleClick()}}>
+    <li className="bg-section-bg border border-button-border min-w-9 w-full h-0 pb-[calc(100%-2px)] relative">
+      <button className={`absolute w-full h-full p-2 ${state.claimed === "X" ? "fill-x-green": state.claimed === "O" ? "fill-o-purple" : ""}`} onClick={() => {handleClick()}}>
       {state.claimed === "X" && <XIcon className="drop-shadow-[0_0_6px] drop-shadow-x-green" />}
       {state.claimed === "O" && <OIcon className="drop-shadow-[0_0_6px] drop-shadow-o-purple" />}
       </button>
