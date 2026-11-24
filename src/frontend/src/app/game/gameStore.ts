@@ -61,7 +61,6 @@ export function connect(url: string) {
   }
 
   ws.onclose = function() {
-    console.log("Disconnected from game websocket");
     if (socket === ws)
       socket = null;
   }
@@ -74,6 +73,7 @@ export function disconnect() {
   socket = null;
   state = initialState;
   ws?.close();
+  console.log("Disconnected from game websocket");
 }
 
 export function sendMessage(message: GameClientMessage) {
