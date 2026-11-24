@@ -71,6 +71,7 @@ export function gameOverUpdate(state: BoardState, message: GameServerMessage) {
 
   const newState = {...state};
 
+  newState.status = "finished";
   newState.board = newState.board.map((field) => {
     return ({...field,
       active: null,
