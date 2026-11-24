@@ -2,7 +2,7 @@ import { initBoardState } from "@/components/board/initBoardState";
 import { BoardState } from "@/types/board"
 import { CellState } from "@/types/cell";
 import { GameServerMessage, GameClientMessage } from "@/types/gameMessages"
-import { moveStateUpdate } from "./gameLogic";
+import { gameOverUpdate, moveStateUpdate } from "./gameLogic";
 
 const initialState: BoardState = initBoardState();
 
@@ -38,6 +38,10 @@ function handleMessage(message: GameServerMessage) {
     }
     case("move"): {
       updateState(moveStateUpdate(state, message));
+      break ;
+    }
+    case("game_over"): {
+      updateState(gameOverUpdate(state, message));
       break ;
     }
   }

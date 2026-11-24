@@ -3,6 +3,7 @@
 import Board from "@/components/board/board";
 import { useSearchParams } from "next/navigation";
 import GameSocketProvider from "./wsProvider";
+import GameStatus from "./gameStatus";
 
 export default function Game() {
   const queryParams = useSearchParams();
@@ -32,10 +33,8 @@ export default function Game() {
           <div className="p-8 bg-section-bg border-2 border-section-border rounded-3xl max-w-fit w-full grow">
             <Board />
           </div>
-          <div>
-            <div>
-              Your turn
-            </div>
+          <div className="grow flex flex-col">
+            <GameStatus />
             <div>
               Match stats
             </div>

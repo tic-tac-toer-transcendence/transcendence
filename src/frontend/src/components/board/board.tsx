@@ -3,6 +3,8 @@
 import Field from "@/components/board/field";
 import { useGameState, useSendMove } from "@/app/game/hooks";
 import { CellState } from "@/types/cell";
+import DisplayBoard from "./displayBoard";
+import { initBoardState } from "./initBoardState";
 
 export default function Board() {
   const boardState = useGameState();
@@ -21,11 +23,13 @@ export default function Board() {
   }
 
   if (boardState.status === "waiting") {
-    return (<div>Waiting...</div>);
+    return (
+        <DisplayBoard state={initBoardState()} />
+      );
   }
 
   return (
-    <div className="bg-background rounded-2xl p-3 grid grid-rows-3 grid-cols-3 gap-3 w-full max-w-md">
+    <div className="bg-background rounded-2xl p-3 grid grid-rows-3 grid-cols-3 gap-3 w-full max-w-2xl">
       {boardState.board.map((state, i) => {
         return <Field key={i} state={state} handleCellClick={handleCellClick} />
       })}
