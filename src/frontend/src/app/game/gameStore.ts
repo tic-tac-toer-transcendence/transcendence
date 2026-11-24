@@ -4,9 +4,7 @@ import { CellState } from "@/types/cell";
 import { GameServerMessage, GameClientMessage } from "@/types/gameMessages"
 import { gameOverUpdate, moveStateUpdate } from "./gameLogic";
 
-const initialState: BoardState = initBoardState();
-
-let state = initialState;
+let state = initBoardState();
 let socket: WebSocket | null = null;
 
 const listeners = new Set<() => void>();
@@ -71,7 +69,7 @@ export function connect(url: string) {
 export function disconnect() {
   const ws = socket;
   socket = null;
-  state = initialState;
+  state = initBoardState();
   ws?.close();
   console.log("Disconnected from game websocket");
 }
