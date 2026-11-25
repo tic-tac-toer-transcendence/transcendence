@@ -7,16 +7,16 @@ import { useActionState, useState } from "react";
 
 export interface LoginFormState {
   email: string,
-  emailError: string
+  emailError: string,
   password: string,
-  passwordError: string
+  passwordError: string,
 }
 
 const initialState = {
   email: "",
   emailError: "",
   password: "",
-  passwordError: ""
+  passwordError: "",
 }
 
 export default function LoginForm() {

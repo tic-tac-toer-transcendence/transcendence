@@ -25,13 +25,15 @@ export default async function fetchPlayers(filter: "all" | "requests" | "friends
     }
   })
 
+  const userIdCookie = store.get("id");
+  const userId = userIdCookie?.value ? userIdCookie.value : "";
   const data: usersOnlineResponse = await res.json();
 
   if (res.status === 401)
     redirect("/login");
 
   const parsedData = schema.parse(data);
-  return (parsedData.online.map((player) => {
+  return (parsedData.online.filter((player) => player.id !== userId).map((player) => {
     return ({
       id: player.id,
       username: player.username,

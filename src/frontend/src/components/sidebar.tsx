@@ -35,9 +35,6 @@ export default async function Sidebar() {
             <SidebarLink path="/find-game" text="Play">
               <PlayIcon />
             </SidebarLink>
-            <SidebarLink path="/ws-test" text="WS Test">
-              <HomeIcon />
-            </SidebarLink>
           </ul>
         </section>
         <section>
