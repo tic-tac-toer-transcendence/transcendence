@@ -1,13 +1,15 @@
 import XIcon from "@/components/icons/xIcon"
 import OIcon from "@/components/icons/oIcon"
+import inviteAction from "@/actions/invite"
 
 interface PlayerProps {
   name: string,
+  id: string,
   friend: "none" | "sent" | "recieved" | "friend",
   icon: "X" | "O"
 }
 
-export default function Player({name, friend, icon}: PlayerProps) {
+export default function Player({name, id, friend, icon}: PlayerProps) {
   return (
     <li className="bg-button-bg border-2 border-button-border p-4 rounded-xl flex items-center justify-between max-w-full gap-2">
       <div className="flex items-center gap-3">
@@ -19,12 +21,15 @@ export default function Player({name, friend, icon}: PlayerProps) {
           {name}
         </span>
       </div>
-      <button className="bg-button-bg border-2 border-button-border hover:border-x-green rounded-lg py-2 px-4 font-extrabold text-white text-xs uppercase cursor-pointer">
-        {friend === "none" && "add friend"}
-        {friend === "sent" && "Friend request sent"}
-        {friend === "recieved" && "Accept friend request"}
-        {friend === "friend" && "Challenge"}
-      </button>
+      <form action={inviteAction} >
+        <input type="hidden" name="id" defaultValue={id} />
+        <button className="bg-button-bg border-2 border-button-border hover:border-x-green rounded-lg py-2 px-4 font-extrabold text-white text-xs uppercase cursor-pointer">
+          {friend === "none" && "add friend"}
+          {friend === "sent" && "Friend request sent"}
+          {friend === "recieved" && "Accept friend request"}
+          {friend === "friend" && "Challenge"}
+        </button>
+      </form>
     </li>
   )
 }

@@ -38,10 +38,10 @@ export default function PresenceProvider({ children }: { children: ReactNode}) {
     })
 
   }, [])
+
   return (
     <>
       {children}
     </>
-
   )
 }
