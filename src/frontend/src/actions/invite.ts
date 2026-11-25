@@ -13,9 +13,4 @@ export default async function inviteAction(formData: FormData) {
       to: formData.get("id"),
     })
   })
-
-  const data = await res.json();
-  console.log(data);
-
-
 }

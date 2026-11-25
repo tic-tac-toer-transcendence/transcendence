@@ -14,7 +14,8 @@ export interface CreateUserState {
   username: string,
   usernameError: string,
   gender: "X" | "O" | undefined,
-  genderError: string
+  genderError: string,
+  id: string
 }
 
 const initialState: CreateUserState = {
@@ -25,7 +26,8 @@ const initialState: CreateUserState = {
   username: "",
   usernameError: "",
   gender: undefined,
-  genderError: ""
+  genderError: "",
+  id: ""
 }
 
 export default function CreateUserForm() {

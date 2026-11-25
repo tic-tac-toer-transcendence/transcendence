@@ -1,9 +1,38 @@
 "use client"
 
-import { ReactNode, useEffect, useRef } from "react"
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect, useRef, createContext, useState } from "react"
+
+type PresenceMessage =
+| { type: "game_invite", fromUser: string, username: string }
+| { type: "game_start", gameId: string }
+
+
+export const InviteContext = createContext({
+  username: "",
+  id: ""
+});
+
 
 export default function PresenceProvider({ children }: { children: ReactNode}) {
   const wsRef = useRef<WebSocket | null>(null);
+  const router = useRouter();
+  const [invite, setInvite] = useState({username: "", id: ""});
+
+  function handleMessage(message: PresenceMessage) {
+    switch(message.type) {
+      case("game_invite"): {
+        setInvite({...invite,
+          username: message.username,
+          id: message.fromUser,
+        })
+        break ;
+      }
+      case("game_start"): {
+        router.push(`/game?gameId=${message.gameId}`);
+      }
+    }
+  }
 
   function presenceConnect() {
     const ws = new WebSocket("wss://localhost/api/ws/presence");
@@ -14,6 +43,8 @@ export default function PresenceProvider({ children }: { children: ReactNode}) {
 
     ws.onmessage = function(e) {
       console.log(`Presence: ${e.data}`);
+      const message: PresenceMessage = JSON.parse(e.data);
+      handleMessage(message);
     }
 
     ws.onclose = function() {
@@ -40,8 +71,8 @@ export default function PresenceProvider({ children }: { children: ReactNode}) {
   }, [])
 
   return (
-    <>
+    <InviteContext.Provider value={invite}>
       {children}
-    </>
+    </InviteContext.Provider>
   )
 }

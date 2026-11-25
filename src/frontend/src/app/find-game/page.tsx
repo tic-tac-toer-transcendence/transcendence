@@ -1,6 +1,7 @@
 import PresenceProvider from "./presenceProvider"
 import botGameAction from "@/actions/botGame"
 import PlayersList from "./playersList";
+import InvitesDashboard from "./invitesDashboard";
 import fetchPlayers from "./fetchPlayers";
 
 export default async function FindGame({ searchParams }: { searchParams: Promise<{ filter? : "all" | "requests" | "friends" }>}) {
@@ -24,9 +25,7 @@ export default async function FindGame({ searchParams }: { searchParams: Promise
         </section>
         <section className="flex gap-8 min-h-0">
           <PlayersList players={players} />
-          <div className="grow">
-            Invites
-          </div>
+          <InvitesDashboard />
         </section>
       </main>
     </PresenceProvider>
